@@ -1,0 +1,36 @@
+########################################
+# ~/.gitconfig-personal - Personal Git config
+#
+# This is loaded automatically for any repo whose Git directory
+# path starts with ~/personal/ (as defined in ~/.gitconfig).
+#
+# Put:
+#   - Personal email
+#   - Personal signing key (if any)
+#   - Personal-only preferences
+########################################
+
+[user]
+    # Name used in commits for PERSONAL repositories.
+    # This overrides the [user] section from ~/.gitconfig.
+    name = Sujeet
+
+    # Personal email address (REPLACE with your actual personal email).
+    email = contact@sujeet.pro
+
+    # If you use a different signing key for personal projects:
+    # signingkey = <YOUR-PERSONAL-GPG-OR-SSH-KEY-ID>
+
+[commit]
+    # If you want all personal commits signed:
+    # gpgsign = true
+
+# Optional: SSH command override for personal repos
+# if you keep a separate personal SSH key.
+#
+# [core]
+#     sshCommand = ssh -i ~/.ssh/id_ed25519_personal -F ~/.ssh/config
+
+########################################
+# End of ~/.gitconfig-personal
+########################################

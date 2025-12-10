@@ -1,0 +1,48 @@
+########################################
+# ~/.gitconfig-work - Work-specific Git config
+#
+# This is loaded automatically for any repo whose Git directory
+# path starts with ~/work/ (as defined in ~/.gitconfig).
+#
+# Put:
+#   - Work email
+#   - Work-specific signing key (if any)
+#   - Work-only settings
+########################################
+
+[user]
+    # Name used in commits for WORK repositories.
+    # This overrides the [user] section from ~/.gitconfig.
+    name = Sujeet
+
+    # Work email address (REPLACE with your actual work email).
+    email = sujeet@company-name.com
+
+    # If you use GPG/SSH signing for work commits, configure:
+    # signingkey = <YOUR-WORK-GPG-OR-SSH-KEY-ID>
+
+[commit]
+    # If you want all work commits to be signed (GPG/SSH),
+    # set this to true. Leave it false or comment out if your
+    # company does not require signed commits.
+    # gpgsign = true
+
+[core]
+    # If work uses a specific line ending policy, you can set:
+    # autocrlf = input
+
+    # Examples of work-specific behavior could go here.
+
+    # Optional: SSH command override for work, if you use a dedicated
+    # SSH key for work repos and want to ensure it is used.
+    #
+    # This is only needed if .ssh/config is not already handling it.
+    # For any repo under ~/work, tell Git to use the "work" SSH key.
+    #
+    # -i ~/.ssh/id_ed25519_work     -> identity file for work
+    # -F ~/.ssh/config             -> still use your normal SSH config
+    # sshCommand = ssh -i ~/.ssh/id_ed25519_work -F ~/.ssh/config
+
+########################################
+# End of ~/.gitconfig-work
+########################################

@@ -1,0 +1,148 @@
+########################################
+# ~/.gitconfig - Global Git config
+#
+# This file contains:
+#   - Common settings (applies to all repos)
+#   - Conditional includes for work and personal repos
+#
+# Directory conventions:
+#   - All work repos under:     ~/work/
+#   - All personal repos under: ~/personal/
+#
+# Git will automatically load:
+#   - ~/.gitconfig-work      if repo lives under ~/work/
+#   - ~/.gitconfig-personal  if repo lives under ~/personal/
+########################################
+
+########################################
+# 1. Base identity (common)
+########################################
+
+[user]
+    # Name used in commits for all repos, unless overridden
+    # in ~/.gitconfig-work or ~/.gitconfig-personal.
+    #
+    # Email is intentionally NOT set here so that work/personal
+    # repos must choose the correct email explicitly.
+    name = Sujeet
+
+########################################
+# 2. Default branch name for new repos
+########################################
+
+[init]
+    # When you run `git init`, this sets the initial branch name
+    # to "main" instead of the legacy default "master".
+    defaultBranch = main
+
+########################################
+# 3. Push behavior (common)
+########################################
+
+[push]
+    # When you run `git push` from a branch that does not yet have
+    # an upstream set, automatically create the corresponding remote
+    # branch and set it as the upstream.
+    #
+    # This makes `git push` behave like:
+    #   git push --set-upstream origin <current-branch>
+    #
+    # Requires a reasonably recent Git (2.37+).
+    autoSetupRemote = true
+
+    # When pushing, push only the current branch to the remote branch
+    # of the same name (rather than all branches).
+    # This is usually the safest behavior in multi-branch environments.
+    default = current
+
+########################################
+# 4. Pull behavior (common)
+########################################
+
+[pull]
+    # You can choose:
+    #   rebase = false   -> merge by default
+    #   rebase = true    -> rebase by default
+    #   rebase = merges  -> rebase preserving merges
+    #
+    # Pick the strategy that matches your team’s norm.
+    # Example below keeps pull as a merge:
+    rebase = false
+
+    # Helps avoid accidental non-fast-forward pulls in some setups.
+    ff = only
+
+########################################
+# 5. Core behavior (common)
+########################################
+
+[core]
+    # Set your preferred editor for Git (uncomment one).
+    # editor = code --wait              # Visual Studio Code
+    # editor = vim
+    # editor = nano
+
+    # Automatically detect file renames/copies more accurately.
+    # Handy for cleaner diffs and history, though slightly slower.
+    #
+    # renameLimit can be adjusted for very large repos.
+    # renameLimit = 2000
+
+    # On macOS, filemode differences can be noisy when tools
+    # change file permissions. Setting this to false ignores them.
+    filemode = false
+
+[merge]
+    # Use a merge tool if you want (uncomment and configure):
+    # tool = vimdiff
+    ff = only
+
+[diff]
+    # Enables improved handling of moved code when using certain
+    # Git versions (optional, but often nice to have).
+    # algorithm = histogram
+
+########################################
+# 6. Colors & pretty output (common)
+########################################
+
+[color]
+    # Enables colored output in supported terminals.
+    ui = auto
+
+[log]
+    # Enables nicer graph output when using e.g. `git log --graph`.
+    decorate = auto
+
+########################################
+# 7. Aliases (common)
+########################################
+
+[alias]
+    # Short, commonly used commands:
+    co = checkout
+    br = branch
+    st = status -sb             # Short and concise status
+    ci = commit
+    lg = log --oneline --graph --decorate --all
+
+    # Show recent commits with relative dates.
+    ll = log --oneline --decorate --graph --all --date=relative
+
+########################################
+# 8. Conditional includes for work/personal
+########################################
+
+# Any repository under ~/work/ will use ~/.gitconfig-work
+# in addition to this global config.
+[includeIf "gitdir:~/work/"]
+    path = ~/.gitconfig-work
+
+# Any repository under ~/personal/ will use ~/.gitconfig-personal
+# in addition to this global config.
+[includeIf "gitdir:~/personal/"]
+    path = ~/.gitconfig-personal
+
+########################################
+# End of ~/.gitconfig
+########################################

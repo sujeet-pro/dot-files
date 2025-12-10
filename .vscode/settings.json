@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        ".gitconfig-work": "properties",
+        ".gitconfig-personal": "properties",
+        ".config/starship.toml": "properties"
+    }
+}
