@@ -85,7 +85,7 @@ style = "bold purple"
 # Overall format of git status information.
 # $all_status  - symbols representing changed/untracked files.
 # $ahead_behind - whether the branch is ahead/behind remote.
-format = "([$all_status$ahead_behind] )"
+format = "[($all_status$ahead_behind )]($style)"
 
 # Symbols for different states. These render only when relevant.
 conflicted = "≠"   # Merge conflicts present.
