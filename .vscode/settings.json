@@ -1,7 +1,13 @@
 {
+    "editor.fontFamily": "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontSize": 16,
+    "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font'",
+    "terminal.integrated.fontSize": 14,
     "files.associations": {
-        ".gitconfig-work": "properties",
-        ".gitconfig-personal": "properties",
-        ".config/starship.toml": "properties"
-    }
+        "**/.gitconfig-work": "properties",
+        "**/.gitconfig-personal": "properties",
+        "**/starship.toml": "toml",
+        "**/.aws/credentials": "ini",
+        "**/.aws/config": "ini"
+    },
 }
