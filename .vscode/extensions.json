@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    // AI - pick one based on your preference
+    "anthropic.claude-code", // pick A
+    "github.copilot", // pick B
+    "github.copilot-chat", // pick B
+    // Development
+    "astro-build.astro-vscode",
+    "bradlc.vscode-tailwindcss",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "humao.rest-client",
+    "mrmlnc.vscode-json5",
+    "tamasfe.even-better-toml"
+  ]
+}

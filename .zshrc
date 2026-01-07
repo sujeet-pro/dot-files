@@ -128,7 +128,8 @@ fi
 # zoxide is a smarter `cd`: it tracks frequently used paths and lets you jump via:
 #   z <pattern>     -> jumps to the most likely directory matching the pattern.
 if command -v zoxide &>/dev/null; then
-  eval "$(zoxide init zsh)"
+  eval "$(zoxide init zsh)" # Initialize zoxide for Zsh and uses `z` command.
+  # eval "$(zoxide init --cmd=cd zsh)" # Alternative: make `cd` use zoxide directly.
 fi
 
 ########################################
@@ -138,6 +139,7 @@ fi
 # `ll` -> better `ls` using eza, with icons (requires Nerd Font in terminal).
 if command -v eza &>/dev/null; then
   alias ll="eza -lah --icons"
+  alias tree="eza --tree --level=2 --icons"
 else
   # Fallback if eza is not installed.
   alias ll="ls -lah"
@@ -150,6 +152,11 @@ alias ...="cd ../.."
 # Git shortcuts.
 alias gs="git status"
 alias gl="git log --oneline --graph --decorate"
+alias gcl='git checkout $(git branch | fzf | sed "s/^[* ]*//")'
+alias gcr='git checkout $(git branch -r | fzf | sed "s/^[* ]*//" | sed "s/origin\///")'
+
+# AWS shortcuts
+alias awswhoami="aws sts get-caller-identity"
 
 ########################################
 # 8. Visual / UX plugins & prompt

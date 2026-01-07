@@ -88,16 +88,16 @@ style = "bold purple"
 format = "[($all_status$ahead_behind )]($style)"
 
 # Symbols for different states. These render only when relevant.
-conflicted = "≠"   # Merge conflicts present.
-ahead      = "⇡"   # Commits ahead of remote.
-behind     = "⇣"   # Commits behind remote.
-diverged   = "⇕"   # Both ahead and behind.
-untracked  = "…"   # Untracked files.
-stashed    = "⚑"   # Stashed changes.
-modified   = "✚"   # Modified files.
-staged     = "●"   # Staged changes.
-renamed    = "»"   # Renamed files.
-deleted    = "✖"   # Deleted files.
+conflicted = "≠" # Merge conflicts present.
+ahead = "⇡"      # Commits ahead of remote.
+behind = "⇣"     # Commits behind remote.
+diverged = "⇕"   # Both ahead and behind.
+untracked = "…"  # Untracked files.
+stashed = "⚑"    # Stashed changes.
+modified = "✚"   # Modified files.
+staged = "●"     # Staged changes.
+renamed = "»"    # Renamed files.
+deleted = "✖"    # Deleted files.
 
 # Leave enabled to always show git info when in a repo.
 disabled = false
@@ -157,7 +157,7 @@ format = "[$time]($style) "
 
 [cmd_duration]
 # Show how long the last command took if it exceeded this many milliseconds.
-min_time = 1000          # 1 second
+min_time = 1000 # 1 second
 # Format string:
 #   $duration - human-readable duration (e.g., 2s, 150ms).
 format = "⏱ [$duration]($style) "
