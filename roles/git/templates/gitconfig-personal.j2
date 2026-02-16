@@ -1,0 +1,17 @@
+########################################
+# ~/.gitconfig-personal - Personal Git config
+#
+# This file is managed by Ansible. Do not edit directly.
+# To change, update roles/git/templates/gitconfig-personal.j2 and re-run the playbook.
+########################################
+
+[user]
+    name = {{ git_user_name }}
+    email = {{ git_personal_email }}
+
+[commit]
+    # gpgsign = true
+
+########################################
+# End of ~/.gitconfig-personal
+########################################

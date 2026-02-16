@@ -1,0 +1,27 @@
+---
+- name: Update Homebrew
+  community.general.homebrew:
+    update_homebrew: true
+  tags: [homebrew]
+
+- name: Install Homebrew formulae
+  community.general.homebrew:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ homebrew_formulae }}"
+  ignore_errors: true
+  tags: [homebrew, formulae]
+
+- name: Install Homebrew casks
+  community.general.homebrew_cask:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ homebrew_casks }}"
+  ignore_errors: true
+  tags: [homebrew, casks]
+
+- name: Install fzf key bindings
+  ansible.builtin.command:
+    cmd: "{{ brew_prefix.stdout }}/opt/fzf/install --key-bindings --completion --no-update-rc"
+    creates: "{{ home_dir }}/.fzf.zsh"
+  tags: [homebrew, fzf]

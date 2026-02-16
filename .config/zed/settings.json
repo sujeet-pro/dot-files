@@ -1,0 +1,24 @@
+{
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)"
+  },
+  "base_keymap": "VSCode",
+  "vim_mode": false,
+  "session": {
+    "trust_all_worktrees": true
+  },
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": {
+    "mode": "dark",
+    "light": "One Light",
+    "dark": "One Dark"
+  },
+  "languages": {
+    "Markdown": {
+      "show_edit_predictions": false
+    }
+  }
+}

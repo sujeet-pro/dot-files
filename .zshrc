@@ -1,3 +1,4 @@
+
 ########################################
 # ~/.zshrc - Sujeet's shell configuration
 ########################################
@@ -17,7 +18,17 @@ else
 fi
 
 ########################################
-# 1. Language & version managers
+# 1. General PATH configuration
+########################################
+
+# Prefer user-local bin for personal scripts or tools.
+export PATH="$HOME/.local/bin:$PATH"
+
+# Add Homebrew's binary directories to PATH so all brew-installed tools are available.
+export PATH="$BREW_PREFIX/bin:$BREW_PREFIX/sbin:$PATH"
+
+########################################
+# 2. Language & version managers
 ########################################
 
 # --- Go (goenv) --------------------------------------------------------------
@@ -52,20 +63,11 @@ if [ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]; then
   source "$SDKMAN_DIR/bin/sdkman-init.sh"
 fi
 
-# --- Node.js (Volta) ---------------------------------------------------------
-# Volta manages Node/PNPM/Yarn versions in a reproducible way.
-# Keeping it early in PATH ensures its shims are picked up.
-export PATH="$HOME/.volta/bin:$PATH"
-
-########################################
-# 2. General PATH configuration
-########################################
-
-# Prefer user-local bin for personal scripts or tools.
-export PATH="$HOME/.local/bin:$PATH"
-
-# Add Homebrew's binary directories to PATH so all brew-installed tools are available.
-export PATH="$BREW_PREFIX/bin:$BREW_PREFIX/sbin:$PATH"
+# --- Node.js (fnm) -----------------------------------------------------------
+# fnm (Fast Node Manager) manages Node.js versions.
+if command -v fnm &>/dev/null; then
+  eval "$(fnm env --use-on-cd --shell zsh)"
+fi
 
 ########################################
 # 3. Core Zsh behavior & history
@@ -156,7 +158,12 @@ alias gcl='git checkout $(git branch | fzf | sed "s/^[* ]*//")'
 alias gcr='git checkout $(git branch -r | fzf | sed "s/^[* ]*//" | sed "s/origin\///")'
 
 # AWS shortcuts
-alias awswhoami="aws sts get-caller-identity"
+alias aws-whoami="aws sts get-caller-identity"
+alias aws-login="zsh ~/.aws/aws-login.zsh"
+
+## Tools shortcuts
+alias ai="aichat -e"
+alias aie="aichat -e"
 
 ########################################
 # 8. Visual / UX plugins & prompt

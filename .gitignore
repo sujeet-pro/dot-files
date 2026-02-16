@@ -1,2 +1,12 @@
 
 .DS_Store
+
+# Ansible
+*.retry
+
+# Sensitive files (never commit)
+.zshenv
+.aws/credentials
+.ssh/id_*
+.ssh/known_hosts
+.ssh/config.local

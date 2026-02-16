@@ -1,97 +1,172 @@
 # dot-files
 
-The folder structure refers to the `$HOME` of the user on a mac os system.
+Automated macOS development environment setup using Ansible.
 
-## Configurations
+## Quick Start
 
-| File | Description |
-| --- | --- |
-| `.zshrc` | **Shell Configuration**: Sets up Homebrew, version managers (goenv, pyenv, sdkman, volta), PATH, zsh history, aliases, and plugins (autosuggestions, syntax highlighting). |
-| `.gitconfig` | **Global Git Config**: Defines user identity, default branch (`main`), push/pull behavior, aliases, and conditional includes for work/personal profiles. |
-| `.gitconfig-personal` | **Personal Git Profile**: Specific Git settings for repositories in `~/personal/`. |
-| `.gitconfig-work` | **Work Git Profile**: Specific Git settings for repositories in `~/work/`. |
-| `.ssh/config` | **SSH Configuration**: Manages SSH keys for different hosts (e.g., using `id_ed25519_personal` for GitHub and `id_ed25519_work` for Bitbucket). |
-| `.config/starship.toml` | **Starship Prompt**: Customizes the terminal prompt with modules for git status, language versions (Python, Node, Go, Java), and execution time. |
-| `.vscode/settings.json` | **VS Code Settings**: associates specific config files with file types for syntax highlighting. |
-
-## Installation of tools
-
-### Better Alternatives
-
-| Original | Better Alternative | Description |
-| --- | --- | --- |
-| ls | eza | ls replacement for listing files and folders |
-| top | htop | top replacement for system monitoring |
-| top | btop | top and htop replacement for system monitoring |
-| cat | bat | cat replacement for viewing files |
-| find | fd | find replacement for finding files |
-| find | fzf | fzf replacement for fuzzy finding files |
-| grep | ripgrep | grep replacement for searching files |
-| cd | z | zoxide replacement for navigating files |
-| man | tldr | man replacement for viewing manual pages (installed via tlrc) |
-
-
-### Brew Formulae
-
-| Formula | Category | Description |
-| --- | --- | --- |
-| `git` | Essentials | Distributed version control system |
-| `curl` | Essentials | Command line tool for transferring data with URLs |
-| `wget` | Essentials | Internet file retriever |
-| `jq` | Essentials | Lightweight and flexible command-line JSON processor |
-| `yq` | Essentials | Portable command-line YAML processor |
-| `htop` | Monitoring | Interactive process viewer |
-| `btop` | Monitoring | Resource monitor that shows usage and stats |
-| `bat` | Monitoring | Cat clone with syntax highlighting and Git integration |
-| `tlrc` | Monitoring | Official tldr client (simplified man pages) |
-| `eza` | File Management | Modern replacement for ls |
-| `tree` | File Management | Display directories as trees |
-| `fd` | File Management | Simple, fast and user-friendly alternative to find |
-| `fzf` | File Management | Command-line fuzzy finder |
-| `ripgrep` | File Management | Recursively searches directories for a regex pattern |
-| `zoxide` | File Management | Smarter cd command |
-| `volta` | Version Management | JavaScript tool manager |
-| `pyenv` | Version Management | Python version management |
-| `goenv` | Version Management | Go version management |
-| `awscli` | Cloud | Official Amazon Web Services CLI |
-| `starship` | Terminal | Minimal, blazing-fast, and infinitely customizable prompt |
-| `zsh-autosuggestions` | Terminal | Fish-like autosuggestions for zsh |
-| `zsh-syntax-highlighting` | Terminal | Syntax highlighting for Zsh |
-| `aichat` | AI | All-in-one AI CLI tool |
-| `gemini-cli` | AI | Command line interface for Google Gemini |
-
-### Brew Casks
-
-| Cask | Category | Description |
-| --- | --- | --- |
-| `antigravity` | Editors & Agents | Powerful agentic AI coding assistant |
-| `cursor` | Editors & Agents | AI-first code editor |
-| `visual-studio-code` | Editors & Agents | Extensible code editor |
-| `codex` | Editors & Agents | OpenAI's coding agent that runs in your terminal |
-| `brave-browser` | Browsers | Privacy-oriented web browser |
-| `chatgpt-atlas` | Browsers | OpenAI's official browser with ChatGPT built in |
-| `discord` | Communications | Voice and text chat |
-| `zoom` | Communications | Video conferencing |
-| `slack` | Communications | Team communication |
-| `orbstack` | Docker | Fast, light, and simple Docker & Linux for macOS |
-| `font-jetbrains-mono-nerd-font` | Fonts | Developer font with icons |
-| `raindropio` | Productivity | Bookmark manager |
-| `maccy` | Productivity | Lightweight clipboard manager |
-| `todoist-app` | Productivity | To-do list and task manager |
-| `nordlayer` | VPN | Business VPN solution |
-
-
-### Installation
-
-To install all the tools listed above, you can use the following commands:
-
-**Install all Brew Formulae:**
 ```sh
-brew install git curl wget jq yq htop btop bat tlrc eza tree fd fzf ripgrep zoxide volta pyenv goenv awscli starship zsh-autosuggestions zsh-syntax-highlighting aichat gemini-cli
+git clone https://github.com/sujeet-pro/dot-files.git ~/dot-files
+cd ~/dot-files
+./setup.sh
 ```
 
-**Install all Brew Casks:**
+`setup.sh` handles everything: Xcode CLI tools, Homebrew, Ansible, and runs the full playbook.
+
+## How It Works
+
+### Environment Variables (`~/.zshenv`)
+
+Personal data (name, email, SSH key names, API tokens) lives in `~/.zshenv`, which is **never committed**. On first run, `setup.sh` copies `.zshenv.example` to `~/.zshenv` and asks you to fill it in.
+
+Ansible templates use these env vars to generate git and SSH configs, so personal data stays out of the repo.
+
+### Personal SSH Hosts (`~/.ssh/config.local`)
+
+The SSH config is templated with standard entries (GitHub, Bitbucket, Colima). For personal hosts (EC2 instances, etc.), add them to `~/.ssh/config.local` — this file is auto-created on first run and is `Include`d by the main SSH config. It's gitignored.
+
+## Makefile Targets
+
 ```sh
-brew install --cask antigravity cursor visual-studio-code codex brave-browser chatgpt-atlas discord zoom slack orbstack font-jetbrains-mono-nerd-font raindropio maccy todoist-app nordlayer
+make help         # Show all available targets
+make setup        # Full bootstrap from scratch
+make update       # Update packages and re-run playbook
+make check        # Dry-run: show what would change
+make validate     # Quick check: tools, configs, symlinks, env vars
+make test         # Local test: validate + Ansible syntax check
+make test-vm      # Full end-to-end test in a clean Tart macOS VM
+make test-vm-debug  # Same as test-vm but keeps VM alive for debugging
 ```
 
+## Testing
+
+### Quick validation (seconds)
+
+```sh
+make validate
+```
+
+Runs `scripts/validate.sh` which checks:
+- All Homebrew formulae and casks are installed
+- Config files exist and symlinks point correctly
+- Required env vars are set (`GIT_USER_NAME`, etc.)
+- Git config resolves correctly
+- Project directories exist
+
+### Local test (seconds)
+
+```sh
+make test
+```
+
+Runs `make validate` plus Ansible playbook syntax check.
+
+### Full end-to-end test (30+ minutes, first run downloads ~15 GB)
+
+```sh
+make test-vm
+```
+
+Runs `scripts/tart-test.sh` which:
+1. Clones a fresh macOS Sequoia VM via [Tart](https://tart.run)
+2. Boots it headless, copies the repo in via rsync
+3. Creates a test `~/.zshenv` with dummy values
+4. Installs Homebrew and Ansible from scratch
+5. Runs the full Ansible playbook
+6. Runs `scripts/validate.sh` inside the VM
+7. Reports pass/fail and tears down the VM
+
+**Requirements:** `brew install cirruslabs/cli/tart` and `brew install esolitos/ipa/sshpass`
+
+To keep the VM alive after a failure (for debugging):
+
+```sh
+make test-vm-debug
+```
+
+Then SSH in with `ssh admin@<VM_IP>` (password: `admin`).
+
+## Directory Structure
+
+```
+dot-files/
+├── .aws/                        # AWS CLI config & scripts (symlinked)
+├── .config/
+│   ├── gh/config.yml            # GitHub CLI config (symlinked)
+│   ├── starship.toml            # Starship prompt config (symlinked)
+│   └── zed/settings.json        # Zed editor config (symlinked)
+├── .vscode/
+│   ├── settings.json            # VS Code settings (symlinked)
+│   └── extensions.json          # Recommended extensions
+├── .claude/
+│   └── commands/sync.md         # Sync skill for Claude Code
+├── roles/
+│   ├── homebrew/                # Homebrew package installation
+│   ├── shell/                   # .zshrc, .zprofile, starship (symlinks)
+│   ├── git/                     # .gitconfig files (templates from env vars)
+│   ├── ssh/                     # .ssh/config (template with config.local)
+│   ├── apps/                    # VS Code, Zed, GH CLI configs
+│   ├── aws/                     # AWS config & scripts
+│   ├── dev-tools/               # fzf keybindings, project directories
+│   └── macos/                   # macOS system defaults (Dock, Finder, keyboard, etc.)
+├── scripts/
+│   ├── validate.sh              # Quick validation script
+│   └── tart-test.sh             # Full VM end-to-end test
+├── CLAUDE.md                    # Project guidelines for Claude Code
+├── .zshenv.example              # Template for personal env vars
+├── .zshrc                       # Shell configuration
+├── setup.sh                     # One-command bootstrap
+├── setup.yml                    # Ansible playbook
+├── Makefile                     # Convenience targets
+└── ansible.cfg                  # Ansible configuration
+```
+
+## What Gets Installed
+
+### CLI Tools (Homebrew Formulae)
+
+| Category | Tools |
+|---|---|
+| Core utilities | aichat, ansible, awscli, bat, eza, fzf, httpie, ripgrep, starship, tlrc, tree, zoxide |
+| Shell plugins | zsh-autosuggestions, zsh-syntax-highlighting |
+| Dev tools | buf, gh, go, node, protobuf, python@3.14 |
+| Node.js | fnm (Fast Node Manager) |
+| Containers | colima, docker, docker-buildx, docker-compose, lima |
+| Cloud & infra | cloudflare-wrangler, k6 |
+| AI | gemini-cli |
+
+### GUI Apps (Homebrew Casks)
+
+| Category | Apps |
+|---|---|
+| Editors & IDEs | cursor, visual-studio-code, intellij-idea, zed |
+| AI Tools | chatgpt-atlas, claude, claude-code, codex, comet |
+| Terminal | ghostty |
+| API clients | httpie-desktop |
+| Communication | zoom |
+| Utilities | maccy, rectangle, notion, nordlayer |
+| Fonts | font-jetbrains-mono, font-jetbrains-mono-nerd-font |
+
+### macOS System Defaults
+
+| Category | Settings |
+|---|---|
+| Screenshots | Save to `~/screen-captures`, PNG format, no shadow |
+| Finder | Show hidden files, search current folder, no extension-change warning |
+| Dock | Autohide, size 36, scale effect, no recent apps, zero delay |
+| Keyboard | Fast repeat (2), short initial delay (15), key repeat over accents |
+| Trackpad | Tracking speed 2.5 |
+| Mission Control | Don't rearrange Spaces by use, fast animation |
+| Desktop Services | No `.DS_Store` on network or USB volumes |
+| General UI | Expanded save/print panels, save to disk, no quarantine dialog |
+| Security | Password required immediately after sleep |
+| TextEdit | Plain text mode, UTF-8 encoding |
+| Activity Monitor | CPU in Dock icon, show all processes |
+| Safari | Developer menu enabled |
+| Chrome | Swipe navigation disabled |
+
+## Templated vs Symlinked Files
+
+- **Symlinked** (no personal data): `.zshrc`, `starship.toml`, VS Code settings, Zed settings, GH CLI config, AWS config
+- **Templated** (personal data from env vars): `.gitconfig`, `.gitconfig-personal`, `.gitconfig-work`, `.ssh/config`
+
+Templated files are rendered as regular files in `~`, so personal data never flows back to git.

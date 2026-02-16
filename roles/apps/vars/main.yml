@@ -1,0 +1,17 @@
+---
+vscode_settings_dir: "{{ home_dir }}/Library/Application Support/Code/User"
+
+vscode_extensions:
+  - anthropic.claude-code
+  - astro-build.astro-vscode
+  - bradlc.vscode-tailwindcss
+  - dbaeumer.vscode-eslint
+  - esbenp.prettier-vscode
+  - github.copilot
+  - github.copilot-chat
+  - google.geminicodeassist
+  - humao.rest-client
+  - mermaidchart.vscode-mermaid-chart
+  - pomdtr.excalidraw-editor
+  - redhat.vscode-xml
+  - tamasfe.even-better-toml

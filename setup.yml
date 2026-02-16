@@ -1,0 +1,86 @@
+---
+# Ansible Playbook for Setting Up a Fresh macOS System
+#
+# Prerequisites:
+#   1. Install Xcode CLI tools: xcode-select --install
+#   2. Install Homebrew: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+#   3. Install Ansible: brew install ansible
+#   4. Copy .zshenv.example to ~/.zshenv and fill in your values
+#   5. Source ~/.zshenv: source ~/.zshenv
+#
+# Run with: ansible-playbook setup.yml
+# Or use: ./setup.sh (handles all prerequisites automatically)
+
+- name: Setup Fresh macOS System
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  vars:
+    dotfiles_repo: "{{ playbook_dir }}"
+    home_dir: "{{ ansible_env.HOME }}"
+
+  pre_tasks:
+    - name: Ensure Homebrew is installed
+      ansible.builtin.stat:
+        path: /opt/homebrew/bin/brew
+      register: homebrew_check
+      failed_when: not homebrew_check.stat.exists
+      tags: [always]
+
+    - name: Get Homebrew prefix
+      ansible.builtin.command: brew --prefix
+      register: brew_prefix
+      changed_when: false
+      tags: [always]
+
+    - name: Check that ~/.zshenv exists
+      ansible.builtin.stat:
+        path: "{{ home_dir }}/.zshenv"
+      register: zshenv_stat
+      tags: [always]
+
+    - name: Fail if GIT_USER_NAME is not set
+      ansible.builtin.fail:
+        msg: >
+          GIT_USER_NAME is not set. Please ensure ~/.zshenv exists and is sourced.
+          Run: cp .zshenv.example ~/.zshenv && vim ~/.zshenv && source ~/.zshenv
+      when: lookup('env', 'GIT_USER_NAME') == ''
+      tags: [always]
+
+  roles:
+    - role: homebrew
+      tags: [homebrew, packages]
+    - role: shell
+      tags: [shell, config]
+    - role: git
+      tags: [git, config]
+    - role: ssh
+      tags: [ssh, config]
+    - role: apps
+      tags: [apps, config]
+    - role: aws
+      tags: [aws, config]
+    - role: dev-tools
+      tags: [dev-tools, config]
+    - role: macos
+      tags: [macos, defaults]
+
+  post_tasks:
+    - name: Display completion message
+      ansible.builtin.debug:
+        msg: |
+          ============================================
+          Setup Complete!
+          ============================================
+
+          Please restart your terminal or run:
+            source ~/.zshrc
+
+          You may also need to:
+            - Set up SSH keys for GitHub/Bitbucket
+            - Configure AWS credentials
+            - Add personal SSH hosts to ~/.ssh/config.local
+            - Sign in to applications
+          ============================================
+      tags: [always]

@@ -1,0 +1,88 @@
+########################################
+# ~/.gitconfig - Global Git config
+#
+# This file is managed by Ansible. Do not edit directly.
+# To change, update roles/git/templates/gitconfig.j2 and re-run the playbook.
+#
+# Directory conventions:
+#   - All work repos under:     ~/work/
+#   - All personal repos under: ~/personal/
+########################################
+
+########################################
+# 1. Base identity (common)
+########################################
+
+[user]
+    name = {{ git_user_name }}
+
+########################################
+# 2. Default branch name for new repos
+########################################
+
+[init]
+    defaultBranch = main
+
+########################################
+# 3. Push behavior (common)
+########################################
+
+[push]
+    autoSetupRemote = true
+    default = current
+
+########################################
+# 4. Pull behavior (common)
+########################################
+
+[pull]
+    rebase = false
+    ff = only
+
+########################################
+# 5. Core behavior (common)
+########################################
+
+[core]
+    filemode = false
+
+[merge]
+    ff = only
+
+[diff]
+
+########################################
+# 6. Colors & pretty output (common)
+########################################
+
+[color]
+    ui = auto
+
+[log]
+    decorate = auto
+
+########################################
+# 7. Aliases (common)
+########################################
+
+[alias]
+    co = checkout
+    br = branch
+    st = status -sb
+    ci = commit
+    lg = log --oneline --graph --decorate --all
+    ll = log --oneline --decorate --graph --all --date=relative
+
+########################################
+# 8. Conditional includes for work/personal
+########################################
+
+[includeIf "gitdir:~/work/"]
+    path = ~/.gitconfig-work
+
+[includeIf "gitdir:~/personal/"]
+    path = ~/.gitconfig-personal
+
+########################################
+# End of ~/.gitconfig
+########################################

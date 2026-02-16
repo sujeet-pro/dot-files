@@ -1,16 +1,20 @@
 {
   "recommendations": [
-    // AI - pick one based on your preference
-    "anthropic.claude-code", // pick A
-    "github.copilot", // pick B
-    "github.copilot-chat", // pick B
+    // AI tools
+    "anthropic.claude-code",
+    "github.copilot",
+    "github.copilot-chat",
+    "google.geminicodeassist",
     // Development
     "astro-build.astro-vscode",
     "bradlc.vscode-tailwindcss",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "humao.rest-client",
-    "mrmlnc.vscode-json5",
-    "tamasfe.even-better-toml"
+    "tamasfe.even-better-toml",
+    "redhat.vscode-xml",
+    // Visual tools
+    "mermaidchart.vscode-mermaid-chart",
+    "pomdtr.excalidraw-editor"
   ]
 }
