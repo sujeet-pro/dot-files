@@ -1,0 +1,3 @@
+---
+ssh_personal_key: "{{ lookup('env', 'SSH_PERSONAL_KEY') | default('id_ed25519_personal', true) }}"
+ssh_work_key: "{{ lookup('env', 'SSH_WORK_KEY') | default('id_ed25519_work', true) }}"

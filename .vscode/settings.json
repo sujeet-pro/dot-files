@@ -1,13 +1,17 @@
 {
     "editor.fontFamily": "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
     "editor.fontSize": 16,
+    "editor.formatOnSave": true,
     "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font'",
     "terminal.integrated.fontSize": 14,
+    "security.workspace.trust.untrustedFiles": "open",
+    "claudeCode.preferredLocation": "panel",
+    "github.copilot.nextEditSuggestions.enabled": true,
     "files.associations": {
         "**/.gitconfig-work": "properties",
         "**/.gitconfig-personal": "properties",
         "**/starship.toml": "toml",
         "**/.aws/credentials": "ini",
         "**/.aws/config": "ini"
-    },
+    }
 }

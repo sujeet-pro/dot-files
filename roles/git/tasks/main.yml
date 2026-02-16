@@ -1,0 +1,21 @@
+---
+- name: Render .gitconfig from template
+  ansible.builtin.template:
+    src: gitconfig.j2
+    dest: "{{ home_dir }}/.gitconfig"
+    mode: "0644"
+  tags: [git, gitconfig]
+
+- name: Render .gitconfig-personal from template
+  ansible.builtin.template:
+    src: gitconfig-personal.j2
+    dest: "{{ home_dir }}/.gitconfig-personal"
+    mode: "0644"
+  tags: [git, gitconfig]
+
+- name: Render .gitconfig-work from template
+  ansible.builtin.template:
+    src: gitconfig-work.j2
+    dest: "{{ home_dir }}/.gitconfig-work"
+    mode: "0644"
+  tags: [git, gitconfig]

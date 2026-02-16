@@ -1,0 +1,77 @@
+---
+# Homebrew CLI tools (formulae)
+homebrew_formulae:
+  # Core utilities
+  - aichat
+  - ansible
+  - awscli
+  - bat
+  - eza
+  - fzf
+  - httpie
+  - ripgrep
+  - starship
+  - tlrc
+  - tree
+  - zoxide
+  - zsh-autosuggestions
+  - zsh-syntax-highlighting
+
+  # Dev tools
+  - buf
+  - gh
+  - go
+  - node
+  - protobuf
+  - python@3.14
+
+  # Node.js version manager
+  - fnm
+
+  # Container tools
+  - colima
+  - docker
+  - docker-buildx
+  - docker-compose
+
+  # Cloud & infra
+  - cloudflare-wrangler
+  - k6
+  - lima
+
+  # AI tools
+  - gemini-cli
+
+# Homebrew GUI applications (casks)
+homebrew_casks:
+  # Editors & IDEs
+  - cursor
+  - visual-studio-code
+  - intellij-idea
+  - zed
+
+  # AI Tools
+  - chatgpt-atlas
+  - claude
+  - claude-code
+  - codex
+  - comet
+
+  # API clients
+  - httpie-desktop
+
+  # Terminal
+  - ghostty
+
+  # Communication
+  - zoom
+
+  # Utilities
+  - maccy
+  - rectangle
+  - notion
+  - nordlayer
+
+  # Fonts
+  - font-jetbrains-mono
+  - font-jetbrains-mono-nerd-font
