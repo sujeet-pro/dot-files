@@ -5,8 +5,16 @@ Automated macOS development environment setup using Ansible.
 ## Quick Start
 
 ```sh
-git clone https://github.com/sujeet-pro/dot-files.git ~/dot-files
-cd ~/dot-files
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/sujeet-pro/dot-files/main/bootstrap-remote.sh)"
+```
+
+This clones into `~/personal/dot-files` and runs `setup.sh`.
+
+Manual path:
+
+```sh
+git clone https://github.com/sujeet-pro/dot-files.git ~/personal/dot-files
+cd ~/personal/dot-files
 ./setup.sh
 ```
 
