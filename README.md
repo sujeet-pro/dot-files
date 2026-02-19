@@ -90,8 +90,11 @@ Then SSH in with `ssh admin@<VM_IP>` (password: `admin`).
 ```
 dot-files/
 ├── .aws/                        # AWS CLI config & scripts (symlinked)
+├── .colima/
+│   └── default.yaml             # Colima profile (symlinked)
 ├── .config/
 │   ├── gh/config.yml            # GitHub CLI config (symlinked)
+│   ├── mise/config.toml         # mise global tools config (symlinked)
 │   ├── starship.toml            # Starship prompt config (symlinked)
 │   └── zed/settings.json        # Zed editor config (symlinked)
 ├── .vscode/
@@ -101,6 +104,7 @@ dot-files/
 │   └── commands/sync.md         # Sync skill for Claude Code
 ├── roles/
 │   ├── homebrew/                # Homebrew package installation
+│   ├── mise/                    # Runtime/SDK installation via mise
 │   ├── shell/                   # .zshrc, .zprofile, starship (symlinks)
 │   ├── git/                     # .gitconfig files (templates from env vars)
 │   ├── ssh/                     # .ssh/config (template with config.local)
@@ -126,13 +130,18 @@ dot-files/
 
 | Category | Tools |
 |---|---|
-| Core utilities | aichat, ansible, awscli, bat, eza, fzf, httpie, ripgrep, starship, tlrc, tree, zoxide |
+| Core utilities | aichat, ansible, awscli, bat, direnv, eza, fzf, mise, ripgrep, starship, tlrc, tree, zoxide |
 | Shell plugins | zsh-autosuggestions, zsh-syntax-highlighting |
-| Dev tools | buf, gh, go, node, protobuf, python@3.14 |
-| Node.js | fnm (Fast Node Manager) |
-| Containers | colima, docker, docker-buildx, docker-compose, lima |
+| Dev tools | actionlint, buf, gh, gitleaks, pre-commit, protobuf, shellcheck, trivy, zizmor |
+| Containers | colima, docker, docker-buildx, docker-compose |
 | Cloud & infra | cloudflare-wrangler, k6 |
 | AI | gemini-cli |
+
+### Language SDKs (mise)
+
+| Language/Tool | Version Strategy |
+|---|---|
+| node, bun, yarn, pnpm, python, uv, go, java, kotlin | latest |
 
 ### GUI Apps (Homebrew Casks)
 
@@ -141,7 +150,7 @@ dot-files/
 | Editors & IDEs | cursor, visual-studio-code, intellij-idea, zed |
 | AI Tools | chatgpt-atlas, claude, claude-code, codex, comet |
 | Terminal | ghostty |
-| API clients | httpie-desktop |
+| API clients | bruno |
 | Communication | zoom |
 | Utilities | maccy, rectangle, notion, nordlayer |
 | Fonts | font-jetbrains-mono, font-jetbrains-mono-nerd-font |
@@ -166,7 +175,7 @@ dot-files/
 
 ## Templated vs Symlinked Files
 
-- **Symlinked** (no personal data): `.zshrc`, `starship.toml`, VS Code settings, Zed settings, GH CLI config, AWS config
+- **Symlinked** (no personal data): `.zshrc`, `starship.toml`, `mise/config.toml`, `.colima/default.yaml`, VS Code settings, Zed settings, GH CLI config, AWS config
 - **Templated** (personal data from env vars): `.gitconfig`, `.gitconfig-personal`, `.gitconfig-work`, `.ssh/config`
 
 Templated files are rendered as regular files in `~`, so personal data never flows back to git.

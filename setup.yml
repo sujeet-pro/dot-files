@@ -51,6 +51,8 @@
   roles:
     - role: homebrew
       tags: [homebrew, packages]
+    - role: mise
+      tags: [mise, runtimes, packages]
     - role: shell
       tags: [shell, config]
     - role: git

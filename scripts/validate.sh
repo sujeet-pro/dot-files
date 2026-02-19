@@ -72,14 +72,29 @@ echo "=========================================="
 # --- Homebrew formulae ---
 echo ""
 echo "Homebrew CLI tools:"
-for cmd in aichat ansible aws bat buf colima docker eza fnm fzf gh go http k6 lima node protoc python3 rg starship tldr tree wrangler zoxide; do
+for cmd in actionlint aichat ansible aws bat buf colima direnv docker eza fzf gh gitleaks k6 mise pre-commit protoc rg shellcheck starship tldr tree trivy wrangler zizmor zoxide; do
   check_command "$cmd"
+done
+
+# --- mise runtimes ---
+echo ""
+echo "mise runtime SDKs:"
+check_mise_tool() {
+  if mise which "$1" &>/dev/null; then
+    pass "mise $1"
+  else
+    fail "mise $1 — not installed"
+  fi
+}
+
+for tool in node bun yarn pnpm python uv go java kotlin; do
+  check_mise_tool "$tool"
 done
 
 # --- Homebrew casks (check apps exist) ---
 echo ""
 echo "Homebrew casks (applications):"
-for app in "Cursor" "Visual Studio Code" "IntelliJ IDEA" "Zed" "Claude" "Ghostty" "Zoom" "Maccy" "Rectangle"; do
+for app in "Cursor" "Visual Studio Code" "IntelliJ IDEA" "Zed" "Claude" "Ghostty" "Bruno" "zoom.us" "Maccy" "Rectangle"; do
   if [ -d "/Applications/${app}.app" ]; then
     pass "$app"
   else
@@ -92,6 +107,7 @@ echo ""
 echo "Config files:"
 check_symlink "$HOME/.zshrc" ".zshrc"
 check_symlink "$HOME/.config/starship.toml" "starship.toml"
+check_symlink "$HOME/.config/mise/config.toml" "mise/config.toml"
 check_file "$HOME/.gitconfig" ".gitconfig"
 check_file "$HOME/.gitconfig-personal" ".gitconfig-personal"
 check_file "$HOME/.gitconfig-work" ".gitconfig-work"
@@ -102,6 +118,7 @@ check_symlink "$HOME/.aws/switch-aws-profile.sh" ".aws/switch-aws-profile.sh"
 check_symlink "$HOME/.aws/aws-login.zsh" ".aws/aws-login.zsh"
 check_symlink "$HOME/.config/gh/config.yml" "gh/config.yml"
 check_symlink "$HOME/.config/zed/settings.json" "zed/settings.json"
+check_symlink "$HOME/.colima/default.yaml" ".colima/default.yaml"
 
 # --- VS Code ---
 echo ""
@@ -133,6 +150,16 @@ echo ""
 echo "Directories:"
 check_file "$HOME/personal" "~/personal"
 check_file "$HOME/work" "~/work"
+
+# --- Docker runtime ---
+echo ""
+echo "Docker runtime:"
+DOCKER_CONTEXT=$(docker context show 2>/dev/null || echo "__unknown__")
+if [ "$DOCKER_CONTEXT" = "colima" ]; then
+  pass "docker context = colima"
+else
+  warn "docker context is $DOCKER_CONTEXT (expected colima)"
+fi
 
 # --- macOS defaults ---
 echo ""
