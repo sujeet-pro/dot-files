@@ -1,0 +1,32 @@
+---
+- name: Ensure ~/.config/mise directory exists
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.config/mise"
+    state: directory
+    mode: "0755"
+  tags: [mise, config]
+
+- name: Symlink mise config
+  ansible.builtin.file:
+    src: "{{ dotfiles_repo }}/.config/mise/config.toml"
+    dest: "{{ home_dir }}/.config/mise/config.toml"
+    state: link
+    force: true
+  tags: [mise, config]
+
+- name: Trust managed mise config files
+  ansible.builtin.command:
+    cmd: "{{ brew_prefix.stdout }}/bin/mise trust {{ item }}"
+  loop:
+    - "{{ home_dir }}/.config/mise/config.toml"
+    - "{{ dotfiles_repo }}/.config/mise/config.toml"
+  changed_when: false
+  tags: [mise, config]
+
+- name: Install global runtimes and SDKs via mise
+  ansible.builtin.command:
+    cmd: "{{ brew_prefix.stdout }}/bin/mise install"
+  environment:
+    MISE_GLOBAL_CONFIG_FILE: "{{ home_dir }}/.config/mise/config.toml"
+  changed_when: false
+  tags: [mise, install]

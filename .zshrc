@@ -31,42 +31,16 @@ export PATH="$BREW_PREFIX/bin:$BREW_PREFIX/sbin:$PATH"
 # 2. Language & version managers
 ########################################
 
-# --- Go (goenv) --------------------------------------------------------------
-# goenv manages multiple Go versions in ~/.goenv.
-export GOENV_ROOT="$HOME/.goenv"
-# Ensure goenv's shims and binaries are before system Go in PATH.
-export PATH="$GOENV_ROOT/bin:$PATH"
-
-if command -v goenv &>/dev/null; then
-  # Initialize goenv so that `go` uses the correct version per project.
-  eval "$(goenv init -)"
+# --- mise --------------------------------------------------------------------
+# mise manages runtime/tool versions globally and per project.
+if command -v mise &>/dev/null; then
+  eval "$(mise activate zsh)"
 fi
 
-# --- Python (pyenv) ----------------------------------------------------------
-# pyenv manages multiple Python versions in ~/.pyenv.
-export PYENV_ROOT="$HOME/.pyenv"
-# Make sure `pyenv` itself is on PATH.
-export PATH="$PYENV_ROOT/bin:$PATH"
-
-if command -v pyenv &>/dev/null; then
-  # Initialize pyenv so `python`/`pip` resolve through pyenv.
-  eval "$(pyenv init -)"
-fi
-
-# --- Java (SDKMAN) -----------------------------------------------------------
-# SDKMAN manages multiple Java (and other JVM tools) versions under ~/.sdkman.
-export SDKMAN_DIR="$HOME/.sdkman"
-
-# Initialize SDKMAN only if it is installed.
-if [ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]; then
-  # This gives you `sdk use java ...`, `sdk list java`, etc.
-  source "$SDKMAN_DIR/bin/sdkman-init.sh"
-fi
-
-# --- Node.js (fnm) -----------------------------------------------------------
-# fnm (Fast Node Manager) manages Node.js versions.
-if command -v fnm &>/dev/null; then
-  eval "$(fnm env --use-on-cd --shell zsh)"
+# --- direnv ------------------------------------------------------------------
+# direnv automatically loads environment variables from project directories.
+if command -v direnv &>/dev/null; then
+  eval "$(direnv hook zsh)"
 fi
 
 ########################################

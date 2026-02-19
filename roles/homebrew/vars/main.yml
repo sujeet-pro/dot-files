@@ -6,9 +6,10 @@ homebrew_formulae:
   - ansible
   - awscli
   - bat
+  - direnv
   - eza
   - fzf
-  - httpie
+  - mise
   - ripgrep
   - starship
   - tlrc
@@ -18,15 +19,15 @@ homebrew_formulae:
   - zsh-syntax-highlighting
 
   # Dev tools
+  - actionlint
+  - gitleaks
   - buf
   - gh
-  - go
-  - node
+  - pre-commit
   - protobuf
-  - python@3.14
-
-  # Node.js version manager
-  - fnm
+  - shellcheck
+  - trivy
+  - zizmor
 
   # Container tools
   - colima
@@ -37,10 +38,15 @@ homebrew_formulae:
   # Cloud & infra
   - cloudflare-wrangler
   - k6
-  - lima
 
   # AI tools
   - gemini-cli
+
+# Formulae to remove as part of migration/cleanup
+homebrew_formulae_absent:
+  - fnm
+  - go
+  - httpie
 
 # Homebrew GUI applications (casks)
 homebrew_casks:
@@ -58,7 +64,7 @@ homebrew_casks:
   - comet
 
   # API clients
-  - httpie-desktop
+  - bruno
 
   # Terminal
   - ghostty
@@ -75,3 +81,7 @@ homebrew_casks:
   # Fonts
   - font-jetbrains-mono
   - font-jetbrains-mono-nerd-font
+
+# Casks to remove as part of migration/cleanup
+homebrew_casks_absent:
+  - httpie-desktop
