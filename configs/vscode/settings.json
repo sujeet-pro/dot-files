@@ -7,11 +7,17 @@
     "security.workspace.trust.untrustedFiles": "open",
     "claudeCode.preferredLocation": "panel",
     "github.copilot.nextEditSuggestions.enabled": true,
-    "files.associations": {
-        "**/.gitconfig-work": "properties",
-        "**/.gitconfig-personal": "properties",
-        "**/starship.toml": "toml",
-        "**/.aws/credentials": "ini",
-        "**/.aws/config": "ini"
-    }
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "keyword.other.dotenv",
+                "settings": {
+                    "foreground": "#FF000000"
+                }
+            }
+        ]
+    },
+    "gitlens.ai.model": "vscode",
+    "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+    "workbench.iconTheme": "vscode-icons"
 }

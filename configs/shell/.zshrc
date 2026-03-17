@@ -1,6 +1,6 @@
 
 ########################################
-# ~/.zshrc - Sujeet's shell configuration
+# ~/.zshrc - Shell configuration
 ########################################
 
 ########################################
@@ -85,62 +85,113 @@ setopt AUTO_MENU                             # Automatically show completion men
 setopt AUTO_LIST                             # List choices when completion is ambiguous.
 
 ########################################
-# 5. Fuzzy finder (fzf)
+# 5. Fuzzy finder (fzf) + fd integration
 ########################################
 
 # fzf provides powerful fuzzy search for history and files.
-# This integration typically sets up:
-#   - Ctrl+R: fuzzy-search through command history.
-#   - Ctrl+T: fuzzy-search files.
 if command -v fzf &>/dev/null; then
-  # `fzf --zsh` prints the Zsh integration code, which we source on the fly.
+  # Load fzf Zsh integration (Ctrl+R for history, Ctrl+T for files, Alt+C for dirs).
   source <(fzf --zsh)
+
+  # Use fd as the default source for fzf (faster than find, respects .gitignore).
+  if command -v fd &>/dev/null; then
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+  fi
+
+  # Show syntax-highlighted file previews (requires bat) in Ctrl+T and Alt+C.
+  if command -v bat &>/dev/null; then
+    export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+    export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --icons --color=always {}'"
+  fi
 fi
 
 ########################################
-# 6. Smarter directory jumping (zoxide)
+# 6. Atuin (enhanced shell history)
+########################################
+
+# Atuin replaces basic Ctrl+R with full-text fuzzy search across all sessions,
+# per-directory history filtering, and optional cross-machine sync.
+if command -v atuin &>/dev/null; then
+  eval "$(atuin init zsh)"
+fi
+
+########################################
+# 7. Smarter directory jumping (zoxide)
 ########################################
 
 # zoxide is a smarter `cd`: it tracks frequently used paths and lets you jump via:
-#   z <pattern>     -> jumps to the most likely directory matching the pattern.
+#   cd <pattern>    -> jumps to the most likely directory matching the pattern.
+#   cdi <pattern>   -> interactive fuzzy selection.
 if command -v zoxide &>/dev/null; then
-  eval "$(zoxide init zsh)" # Initialize zoxide for Zsh and uses `z` command.
-  # eval "$(zoxide init --cmd=cd zsh)" # Alternative: make `cd` use zoxide directly.
+  eval "$(zoxide init --cmd=cd zsh)"
 fi
 
 ########################################
-# 7. Aliases
+# 8. Aliases
 ########################################
 
-# `ll` -> better `ls` using eza, with icons (requires Nerd Font in terminal).
+# --- File listing (eza) ---
 if command -v eza &>/dev/null; then
   alias ll="eza -lah --icons"
+  alias la="eza -a --icons"
   alias tree="eza --tree --level=2 --icons"
+  alias lt="eza -lah --icons --sort=modified"
 else
-  # Fallback if eza is not installed.
   alias ll="ls -lah"
 fi
 
-# Directory movement shortcuts.
+# --- Directory movement ---
 alias ..="cd .."
 alias ...="cd ../.."
+alias ....="cd ../../.."
 
-# Git shortcuts.
+# --- Git shortcuts ---
 alias gs="git status"
 alias gl="git log --oneline --graph --decorate"
+alias gd="git diff"
+alias gds="git diff --stat"
+alias gdc="git diff --cached"
 alias gcl='git checkout $(git branch | fzf | sed "s/^[* ]*//")'
 alias gcr='git checkout $(git branch -r | fzf | sed "s/^[* ]*//" | sed "s/origin\///")'
+alias gbd='git branch | fzf -m | xargs git branch -d'
+alias lg="lazygit"
 
-# AWS shortcuts
+# --- AWS shortcuts ---
 alias aws-whoami="aws sts get-caller-identity"
-alias aws-login="zsh ~/.aws/aws-login.zsh"
 
-## Tools shortcuts
-alias ai="aichat -e"
-alias aie="aichat -e"
+# --- Frontend shortcuts ---
+alias scripts="jq '.scripts' package.json"
+alias deps="jq '.dependencies' package.json"
+alias devdeps="jq '.devDependencies' package.json"
+killport() { lsof -ti:"$1" | xargs kill -9; }
+
+# --- Tools shortcuts ---
+if command -v aichat &>/dev/null; then
+  alias ai="aichat -e"
+  alias aie="aichat -e"
+fi
+if command -v claude &>/dev/null; then
+  alias cc="claude --dangerously-skip-permissions"
+fi
+if command -v agents &>/dev/null; then
+  alias cursor-cli="agents"
+fi
+
+# --- Quick file viewing (bat) ---
+if command -v bat &>/dev/null; then
+  alias cat="bat --paging=never"
+  alias catp="bat --plain --paging=never"
+fi
+
+# --- JSON pretty-print ---
+if command -v jq &>/dev/null; then
+  alias json="jq '.'"
+fi
 
 ########################################
-# 8. Visual / UX plugins & prompt
+# 9. Visual / UX plugins & prompt
 ########################################
 
 # --- Autosuggestions ---------------------------------------------------------
@@ -153,10 +204,6 @@ fi
 # --- Starship prompt ---------------------------------------------------------
 # Starship is a fast, git-aware prompt written in Rust.
 # It reads configuration from ~/.config/starship.toml.
-# It provides:
-#   - Current directory and git branch
-#   - Git status icons (staged, modified, untracked, ahead/behind)
-#   - Optional language/runtime version info (Python, Node, Go, etc.)
 if command -v starship &>/dev/null; then
   eval "$(starship init zsh)"
 fi
@@ -171,3 +218,6 @@ fi
 ########################################
 # End of ~/.zshrc
 ########################################
+
+# Added by Antigravity
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"

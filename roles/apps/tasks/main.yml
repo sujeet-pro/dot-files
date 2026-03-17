@@ -10,7 +10,7 @@
 
 - name: Symlink VS Code settings.json
   ansible.builtin.file:
-    src: "{{ dotfiles_repo }}/.vscode/settings.json"
+    src: "{{ dotfiles_repo }}/configs/vscode/settings.json"
     dest: "{{ vscode_settings_dir }}/settings.json"
     state: link
     force: true
@@ -36,7 +36,7 @@
 
 - name: Symlink GitHub CLI config
   ansible.builtin.file:
-    src: "{{ dotfiles_repo }}/.config/gh/config.yml"
+    src: "{{ dotfiles_repo }}/configs/gh/config.yml"
     dest: "{{ home_dir }}/.config/gh/config.yml"
     state: link
     force: true
@@ -53,8 +53,42 @@
 
 - name: Symlink Zed settings
   ansible.builtin.file:
-    src: "{{ dotfiles_repo }}/.config/zed/settings.json"
+    src: "{{ dotfiles_repo }}/configs/zed/settings.json"
     dest: "{{ home_dir }}/.config/zed/settings.json"
     state: link
     force: true
   tags: [apps, zed]
+
+# --- cmux (Ghostty-based, reads ~/.config/ghostty/config) ---
+
+- name: Ensure .config/ghostty directory exists
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.config/ghostty"
+    state: directory
+    mode: "0755"
+  tags: [apps, cmux]
+
+- name: Symlink Ghostty config (used by cmux)
+  ansible.builtin.file:
+    src: "{{ dotfiles_repo }}/configs/ghostty/config"
+    dest: "{{ home_dir }}/.config/ghostty/config"
+    state: link
+    force: true
+  tags: [apps, cmux]
+
+# --- btop ---
+
+- name: Ensure .config/btop directory exists
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.config/btop"
+    state: directory
+    mode: "0755"
+  tags: [apps, btop]
+
+- name: Symlink btop config
+  ansible.builtin.file:
+    src: "{{ dotfiles_repo }}/configs/btop/btop.conf"
+    dest: "{{ home_dir }}/.config/btop/btop.conf"
+    state: link
+    force: true
+  tags: [apps, btop]

@@ -40,12 +40,18 @@
       register: zshenv_stat
       tags: [always]
 
-    - name: Fail if GIT_USER_NAME is not set
+    - name: Validate required environment variables
       ansible.builtin.fail:
         msg: >
-          GIT_USER_NAME is not set. Please ensure ~/.zshenv exists and is sourced.
-          Run: cp .zshenv.example ~/.zshenv && vim ~/.zshenv && source ~/.zshenv
-      when: lookup('env', 'GIT_USER_NAME') == ''
+          {{ item }} is not set. Please add it to ~/.zshenv and re-run:
+            vim ~/.zshenv && source ~/.zshenv && ./setup.sh
+      when: lookup('env', item) == ''
+      loop:
+        - GIT_USER_NAME
+        - GIT_PERSONAL_EMAIL
+        - GIT_WORK_EMAIL
+        - SSH_PERSONAL_KEY
+        - SSH_WORK_KEY
       tags: [always]
 
   roles:
@@ -61,6 +67,8 @@
       tags: [ssh, config]
     - role: apps
       tags: [apps, config]
+    - role: claude
+      tags: [claude, config]
     - role: aws
       tags: [aws, config]
     - role: dev-tools

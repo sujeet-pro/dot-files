@@ -284,6 +284,7 @@
     key: IncludeDevelopMenu
     type: bool
     value: "{{ safari_developer_menu }}"
+  ignore_errors: true  # Safari prefs are sandboxed; toggle manually via Safari > Settings > Advanced
   tags: [macos, defaults, safari]
 
 # ---- Chrome ----

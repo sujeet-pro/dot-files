@@ -17,7 +17,7 @@ add_newline = true
 # Maximum time (in milliseconds) starship will spend rendering
 # the prompt for a single command. Keeps things snappy even in
 # large git repos.
-command_timeout = 800
+command_timeout = 2000
 
 # How long to scan the current directory (in milliseconds) to
 # detect language tools / git / etc.
@@ -28,7 +28,7 @@ scan_timeout = 50
 #  - First line: directory, git branch, git status, and language info.
 #  - Second line: prompt character.
 format = """
-$directory$git_branch$git_status$python$nodejs$golang$java
+$directory$git_branch$git_status$python$nodejs$bun$golang$java$kotlin
 $character"""
 
 #################
@@ -131,11 +131,23 @@ symbol = " "
 format = "[$symbol$version]($style) "
 style = "bold cyan"
 
+[bun]
+# Shown when bun.lockb or bunfig.toml is present.
+symbol = "🧅 "
+format = "[$symbol$version]($style) "
+style = "bold white"
+
 [java]
 # Shown when pom.xml, build.gradle, or similar files exist.
 symbol = "☕ "
 format = "[$symbol$version]($style) "
 style = "bold red"
+
+[kotlin]
+# Shown when *.kt or *.kts files are present.
+symbol = "🅺 "
+format = "[$symbol$version]($style) "
+style = "bold magenta"
 
 ##########################
 # Time (optional)        #

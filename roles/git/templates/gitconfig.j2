@@ -45,11 +45,23 @@
 
 [core]
     filemode = false
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true
+    side-by-side = true
+    line-numbers = true
+    hyperlinks = true
 
 [merge]
     ff = only
+    conflictstyle = zdiff3
 
 [diff]
+    colorMoved = default
 
 ########################################
 # 6. Colors & pretty output (common)
