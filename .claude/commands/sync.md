@@ -28,9 +28,6 @@ For each config file below, compare the current system file with the repo copy. 
 | `~/.aws/config` | `configs/aws/config` |
 | `~/.colima/default.yaml` | `configs/colima/default.yaml` |
 | `~/Library/Application Support/Code/User/settings.json` | `configs/vscode/settings.json` |
-| `~/.claude/settings.json` | `configs/claude/settings.json` |
-
-Also check for new skill directories under `~/.claude/skills/` that are not yet in `configs/claude/skills/`.
 
 ## 5. Update repo files
 

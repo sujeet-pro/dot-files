@@ -27,7 +27,10 @@ export SSH_WORK_KEY="id_ed25519_work"
 # --- AWS (optional) ---
 # export AWS_DEFAULT_REGION="ap-south-1"
 
-# --- Confluence (optional) ---
+# --- Bitbucket (optional — required for claude-devkit PR reviews) ---
+# export BITBUCKET_TOKEN=""
+
+# --- Confluence (optional — required for claude-devkit doc operations) ---
 # export CONFLUENCE_BASE_URL=""
 # export CONFLUENCE_EMAIL=""
 # export CONFLUENCE_API_TOKEN=""

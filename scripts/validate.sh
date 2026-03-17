@@ -91,6 +91,17 @@ for tool in node bun yarn pnpm python uv go java kotlin; do
   check_mise_tool "$tool"
 done
 
+# --- npm global packages ---
+echo ""
+echo "npm global packages:"
+for pkg in mmdc excalidraw-cli; do
+  if mise exec -- which "$pkg" &>/dev/null; then
+    pass "$pkg"
+  else
+    fail "$pkg — not installed (npm install -g)"
+  fi
+done
+
 # --- Homebrew casks (check apps exist) ---
 echo ""
 echo "Homebrew casks (applications):"
@@ -119,8 +130,6 @@ check_symlink "$HOME/.config/zed/settings.json" "zed/settings.json"
 check_symlink "$HOME/.colima/default.yaml" ".colima/default.yaml"
 check_symlink "$HOME/.config/ghostty/config" "ghostty/config (cmux)"
 check_symlink "$HOME/.config/btop/btop.conf" "btop/btop.conf"
-check_symlink "$HOME/.claude/settings.json" "claude/settings.json"
-check_symlink "$HOME/.claude/skills/pr-review/SKILL.md" "claude/skills/pr-review/SKILL.md"
 
 # --- VS Code ---
 echo ""

@@ -30,3 +30,12 @@
     MISE_GLOBAL_CONFIG_FILE: "{{ home_dir }}/.config/mise/config.toml"
   changed_when: false
   tags: [mise, install]
+
+- name: Install global npm packages via mise-managed Node
+  ansible.builtin.command:
+    cmd: "{{ brew_prefix.stdout }}/bin/mise exec -- npm install -g {{ item }}"
+  environment:
+    MISE_GLOBAL_CONFIG_FILE: "{{ home_dir }}/.config/mise/config.toml"
+  loop: "{{ npm_global_packages }}"
+  changed_when: false
+  tags: [mise, npm, install]

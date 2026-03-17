@@ -6,7 +6,7 @@ packages, configure apps, set system defaults, and symlink/template config files
 ## Architecture
 
 - **Playbook**: `setup.yml` — orchestrates all roles in order
-- **Roles** (under `roles/`): homebrew, mise, shell, git, ssh, apps, claude, aws, dev-tools, macos
+- **Roles** (under `roles/`): homebrew, mise, shell, git, ssh, apps, aws, dev-tools, macos
 - **`configs/`** — all app config files, organized by app (deployed to the system via symlinks)
 - **Templates** (Jinja2) for config with personal data (`.gitconfig`, `.ssh/config`) — live in `roles/<role>/templates/`
 - **Env vars** live in `~/.zshenv` (never committed) — see `configs/shell/.zshenv.example`
