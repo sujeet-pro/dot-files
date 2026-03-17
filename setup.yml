@@ -67,8 +67,6 @@
       tags: [ssh, config]
     - role: apps
       tags: [apps, config]
-    - role: claude
-      tags: [claude, config]
     - role: aws
       tags: [aws, config]
     - role: dev-tools
@@ -92,5 +90,10 @@
             - Configure AWS credentials
             - Add personal SSH hosts to ~/.ssh/config.local
             - Sign in to applications
+
+          Claude Code configuration:
+            Claude settings, skills, agents, and MCP integrations
+            are managed by claude-devkit (not this repo).
+            See: ~/personal/claude-devkit/README.md
           ============================================
       tags: [always]
