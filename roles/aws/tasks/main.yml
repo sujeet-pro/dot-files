@@ -8,24 +8,8 @@
 
 - name: Symlink AWS config
   ansible.builtin.file:
-    src: "{{ dotfiles_repo }}/.aws/config"
+    src: "{{ dotfiles_repo }}/configs/aws/config"
     dest: "{{ home_dir }}/.aws/config"
-    state: link
-    force: true
-  tags: [aws]
-
-- name: Symlink AWS profile switcher
-  ansible.builtin.file:
-    src: "{{ dotfiles_repo }}/.aws/switch-aws-profile.sh"
-    dest: "{{ home_dir }}/.aws/switch-aws-profile.sh"
-    state: link
-    force: true
-  tags: [aws]
-
-- name: Symlink AWS SSO login helper
-  ansible.builtin.file:
-    src: "{{ dotfiles_repo }}/.aws/aws-login.zsh"
-    dest: "{{ home_dir }}/.aws/aws-login.zsh"
     state: link
     force: true
   tags: [aws]

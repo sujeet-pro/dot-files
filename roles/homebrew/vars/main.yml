@@ -4,11 +4,14 @@ homebrew_formulae:
   # Core utilities
   - aichat
   - ansible
+  - atuin
   - awscli
   - bat
   - direnv
   - eza
+  - fd
   - fzf
+  - jq
   - mise
   - ripgrep
   - starship
@@ -17,16 +20,21 @@ homebrew_formulae:
   - zoxide
   - zsh-autosuggestions
   - zsh-syntax-highlighting
+  - btop
 
   # Dev tools
   - actionlint
+  - git-delta
   - gitleaks
   - buf
   - gh
+  - hyperfine
+  - lazygit
   - pre-commit
   - protobuf
   - shellcheck
   - trivy
+  - watchexec
   - zizmor
 
   # Container tools
@@ -54,27 +62,33 @@ homebrew_casks:
   - cursor
   - visual-studio-code
   - intellij-idea
+  - webstorm
+  - pycharm
+  - datagrip
   - zed
+  - antigravity
 
   # AI Tools
   - chatgpt-atlas
   - claude
   - claude-code
   - codex
+  - codex-app
   - comet
+  - cursor-cli
 
   # API clients
   - bruno
 
   # Terminal
-  - ghostty
+  - cmux
 
   # Communication
   - zoom
 
   # Utilities
-  - maccy
-  - rectangle
+  - logi-options+
+  - raycast
   - notion
   - nordlayer
 
@@ -84,4 +98,7 @@ homebrew_casks:
 
 # Casks to remove as part of migration/cleanup
 homebrew_casks_absent:
+  - ghostty
   - httpie-desktop
+  - maccy
+  - rectangle

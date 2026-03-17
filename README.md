@@ -2,15 +2,21 @@
 
 Automated macOS development environment setup using Ansible.
 
+## What Started as Dot Files
+
+This repository started as a simple collection of configuration files (`.zshrc`, `.gitconfig`, `starship.toml`, etc.) — the classic "dot-files" repo. Over time it evolved into a **full macOS system setup tool** that handles everything from installing CLI tools and GUI apps to configuring system defaults and managing language runtimes.
+
+If you're here just for the configuration files, see [Where Are the Configs?](#where-are-the-configs) below.
+
 ## Quick Start
+
+One-liner for a fresh Mac (clones the repo and runs setup):
 
 ```sh
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/sujeet-pro/dot-files/main/bootstrap-remote.sh)"
 ```
 
-This clones into `~/personal/dot-files` and runs `setup.sh`.
-
-Manual path:
+Or manually:
 
 ```sh
 git clone https://github.com/sujeet-pro/dot-files.git ~/personal/dot-files
@@ -18,13 +24,54 @@ cd ~/personal/dot-files
 ./setup.sh
 ```
 
-`setup.sh` handles everything: Xcode CLI tools, Homebrew, Ansible, and runs the full playbook.
+`setup.sh` handles everything:
+1. Installs Xcode CLI tools, Homebrew, and Ansible (if missing)
+2. Creates `~/.zshenv` from a template and asks you to fill in personal values
+3. Runs the Ansible playbook to install packages, configure apps, and set system defaults
+4. Detects any installed packages not tracked in the repo and offers to add or remove them
+
+Re-running `./setup.sh` is always safe — it's fully idempotent. Missing software gets installed, broken symlinks get fixed, and unmanaged packages get flagged.
+
+## Where Are the Configs?
+
+All application configuration files live under **`configs/`**, organized by app:
+
+```
+configs/
+├── aws/config              # AWS CLI configuration
+├── btop/btop.conf          # btop system monitor
+├── claude/
+│   ├── settings.json       # Claude Code global settings
+│   └── skills/             # Claude Code custom skills
+├── colima/default.yaml     # Colima (Docker runtime) profile
+├── gh/config.yml           # GitHub CLI
+├── ghostty/config          # Ghostty terminal (used by cmux)
+├── mise/config.toml        # mise global tool versions
+├── shell/
+│   ├── .zshrc              # Zsh configuration
+│   ├── .zshenv.example     # Template for personal env vars
+│   ├── starship.toml       # Starship prompt theme
+│   └── SHELL-GUIDE.md      # Shell setup documentation
+├── vscode/settings.json    # VS Code editor settings
+└── zed/settings.json       # Zed editor settings
+```
+
+These are **symlinked** to their expected locations on the system (e.g. `configs/shell/.zshrc` → `~/.zshrc`). Editing either side updates both.
+
+Some configs contain personal data (name, email, SSH keys) and are **templated** instead of symlinked:
+
+| File | Template | Source of Values |
+|------|----------|-----------------|
+| `~/.gitconfig` | `roles/git/templates/gitconfig.j2` | `~/.zshenv` env vars |
+| `~/.gitconfig-personal` | `roles/git/templates/gitconfig-personal.j2` | `~/.zshenv` env vars |
+| `~/.gitconfig-work` | `roles/git/templates/gitconfig-work.j2` | `~/.zshenv` env vars |
+| `~/.ssh/config` | `roles/ssh/templates/ssh_config.j2` | `~/.zshenv` env vars |
 
 ## How It Works
 
 ### Environment Variables (`~/.zshenv`)
 
-Personal data (name, email, SSH key names, API tokens) lives in `~/.zshenv`, which is **never committed**. On first run, `setup.sh` copies `.zshenv.example` to `~/.zshenv` and asks you to fill it in.
+Personal data (name, email, SSH key names, API tokens) lives in `~/.zshenv`, which is **never committed**. On first run, `setup.sh` copies `configs/shell/.zshenv.example` to `~/.zshenv` and asks you to fill it in.
 
 Ansible templates use these env vars to generate git and SSH configs, so personal data stays out of the repo.
 
@@ -32,18 +79,29 @@ Ansible templates use these env vars to generate git and SSH configs, so persona
 
 The SSH config is templated with standard entries (GitHub, Bitbucket, Colima). For personal hosts (EC2 instances, etc.), add them to `~/.ssh/config.local` — this file is auto-created on first run and is `Include`d by the main SSH config. It's gitignored.
 
-## Makefile Targets
+### Cleanup Check
 
-```sh
-make help         # Show all available targets
-make setup        # Full bootstrap from scratch
-make update       # Update packages and re-run playbook
-make check        # Dry-run: show what would change
-make validate     # Quick check: tools, configs, symlinks, env vars
-make test         # Local test: validate + Ansible syntax check
-make test-vm      # Full end-to-end test in a clean Tart macOS VM
-make test-vm-debug  # Same as test-vm but keeps VM alive for debugging
-```
+After running the playbook, `setup.sh` compares what's installed on your system against what's configured in the repo:
+
+- **Homebrew formulae** — `brew leaves` vs `roles/homebrew/vars/main.yml`
+- **Homebrew casks** — `brew list --cask` vs `roles/homebrew/vars/main.yml`
+- **VS Code extensions** — `code --list-extensions` vs `roles/apps/vars/main.yml`
+
+For each unmanaged package, you can choose to **add it to the repo**, **remove it from the system**, or **skip** it.
+
+## Make Targets
+
+| Command | Description |
+|---------|-------------|
+| `make setup` | Full bootstrap from scratch (`setup.sh`) |
+| `make update` | Update Homebrew packages and re-run playbook |
+| `make cleanup` | Detect unmanaged packages and offer to add/remove them |
+| `make check` | Dry-run: show what Ansible would change without applying |
+| `make validate` | Quick validation of tools, configs, symlinks, and env vars |
+| `make test` | `validate` + Ansible syntax check |
+| `make test-vm` | Full end-to-end test in a clean Tart macOS VM |
+| `make test-vm-debug` | Same as `test-vm` but keeps VM alive for debugging |
+| `make help` | Show all available targets |
 
 ## Testing
 
@@ -55,10 +113,11 @@ make validate
 
 Runs `scripts/validate.sh` which checks:
 - All Homebrew formulae and casks are installed
-- Config files exist and symlinks point correctly
+- Config symlinks point correctly
 - Required env vars are set (`GIT_USER_NAME`, etc.)
 - Git config resolves correctly
 - Project directories exist
+- macOS defaults are applied
 
 ### Local test (seconds)
 
@@ -93,54 +152,15 @@ make test-vm-debug
 
 Then SSH in with `ssh admin@<VM_IP>` (password: `admin`).
 
-## Directory Structure
-
-```
-dot-files/
-├── .aws/                        # AWS CLI config & scripts (symlinked)
-├── .colima/
-│   └── default.yaml             # Colima profile (symlinked)
-├── .config/
-│   ├── gh/config.yml            # GitHub CLI config (symlinked)
-│   ├── mise/config.toml         # mise global tools config (symlinked)
-│   ├── starship.toml            # Starship prompt config (symlinked)
-│   └── zed/settings.json        # Zed editor config (symlinked)
-├── .vscode/
-│   ├── settings.json            # VS Code settings (symlinked)
-│   └── extensions.json          # Recommended extensions
-├── .claude/
-│   └── commands/sync.md         # Sync skill for Claude Code
-├── roles/
-│   ├── homebrew/                # Homebrew package installation
-│   ├── mise/                    # Runtime/SDK installation via mise
-│   ├── shell/                   # .zshrc, .zprofile, starship (symlinks)
-│   ├── git/                     # .gitconfig files (templates from env vars)
-│   ├── ssh/                     # .ssh/config (template with config.local)
-│   ├── apps/                    # VS Code, Zed, GH CLI configs
-│   ├── aws/                     # AWS config & scripts
-│   ├── dev-tools/               # fzf keybindings, project directories
-│   └── macos/                   # macOS system defaults (Dock, Finder, keyboard, etc.)
-├── scripts/
-│   ├── validate.sh              # Quick validation script
-│   └── tart-test.sh             # Full VM end-to-end test
-├── CLAUDE.md                    # Project guidelines for Claude Code
-├── .zshenv.example              # Template for personal env vars
-├── .zshrc                       # Shell configuration
-├── setup.sh                     # One-command bootstrap
-├── setup.yml                    # Ansible playbook
-├── Makefile                     # Convenience targets
-└── ansible.cfg                  # Ansible configuration
-```
-
 ## What Gets Installed
 
 ### CLI Tools (Homebrew Formulae)
 
 | Category | Tools |
 |---|---|
-| Core utilities | aichat, ansible, awscli, bat, direnv, eza, fzf, mise, ripgrep, starship, tlrc, tree, zoxide |
+| Core utilities | aichat, ansible, atuin, awscli, bat, btop, direnv, eza, fd, fzf, jq, mise, ripgrep, starship, tlrc, tree, zoxide |
 | Shell plugins | zsh-autosuggestions, zsh-syntax-highlighting |
-| Dev tools | actionlint, buf, gh, gitleaks, pre-commit, protobuf, shellcheck, trivy, zizmor |
+| Dev tools | actionlint, buf, gh, git-delta, gitleaks, hyperfine, lazygit, pre-commit, protobuf, shellcheck, trivy, watchexec, zizmor |
 | Containers | colima, docker, docker-buildx, docker-compose |
 | Cloud & infra | cloudflare-wrangler, k6 |
 | AI | gemini-cli |
@@ -155,12 +175,12 @@ dot-files/
 
 | Category | Apps |
 |---|---|
-| Editors & IDEs | cursor, visual-studio-code, intellij-idea, zed |
-| AI Tools | chatgpt-atlas, claude, claude-code, codex, comet |
-| Terminal | ghostty |
+| Editors & IDEs | cursor, visual-studio-code, intellij-idea, webstorm, pycharm, datagrip, zed, antigravity |
+| AI tools | chatgpt-atlas, claude, claude-code, codex, codex-app, comet, cursor-cli |
+| Terminal | cmux |
 | API clients | bruno |
 | Communication | zoom |
-| Utilities | maccy, rectangle, notion, nordlayer |
+| Utilities | logi-options+, raycast, notion, nordlayer |
 | Fonts | font-jetbrains-mono, font-jetbrains-mono-nerd-font |
 
 ### macOS System Defaults
@@ -181,9 +201,41 @@ dot-files/
 | Safari | Developer menu enabled |
 | Chrome | Swipe navigation disabled |
 
-## Templated vs Symlinked Files
+## Repository Structure
 
-- **Symlinked** (no personal data): `.zshrc`, `starship.toml`, `mise/config.toml`, `.colima/default.yaml`, VS Code settings, Zed settings, GH CLI config, AWS config
-- **Templated** (personal data from env vars): `.gitconfig`, `.gitconfig-personal`, `.gitconfig-work`, `.ssh/config`
+```
+dot-files/
+├── configs/                         # All app configuration files (see above)
+├── roles/
+│   ├── homebrew/                    # Homebrew formulae and cask installation
+│   ├── mise/                        # Runtime/SDK installation via mise
+│   ├── shell/                       # .zshrc, .zprofile, starship (symlinks)
+│   ├── git/                         # .gitconfig files (templates from env vars)
+│   ├── ssh/                         # .ssh/config (template with config.local)
+│   ├── apps/                        # VS Code, Zed, GH CLI, Ghostty, btop configs
+│   ├── claude/                      # Claude Code settings and skills
+│   ├── aws/                         # AWS CLI config
+│   ├── dev-tools/                   # fzf keybindings, colima, project directories
+│   └── macos/                       # macOS system defaults (Dock, Finder, keyboard, etc.)
+├── scripts/
+│   ├── validate.sh                  # Quick validation script
+│   └── tart-test.sh                 # Full VM end-to-end test
+├── setup.sh                         # Single entry point: bootstrap + playbook + cleanup
+├── setup.yml                        # Ansible playbook
+├── Makefile                         # Convenience targets
+└── ansible.cfg                      # Ansible configuration
+```
 
-Templated files are rendered as regular files in `~`, so personal data never flows back to git.
+## Adding Packages
+
+- **Homebrew formula**: add to `homebrew_formulae` in `roles/homebrew/vars/main.yml`
+- **Homebrew cask**: add to `homebrew_casks` in `roles/homebrew/vars/main.yml`
+- **VS Code extension**: add to `vscode_extensions` in `roles/apps/vars/main.yml`
+
+Or just install them normally and run `make cleanup` — it will detect the new packages and offer to add them to the config.
+
+## Adding App Configs
+
+1. Place config files under `configs/<app-name>/`
+2. Add symlink tasks to the appropriate role in `roles/<role>/tasks/main.yml`
+3. Add validation checks to `scripts/validate.sh`

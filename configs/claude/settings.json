@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits"
+  },
+  "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true,
+  "instructions": [
+    "When you encounter URLs matching these patterns, use the corresponding MCP server tools instead of WebFetch:",
+    "- docs.google.com/**, sheets.google.com/**, drive.google.com/**, slides.google.com/** → use the 'google-drive' MCP tools (supports Docs editing, Sheets cell management, Drive file operations, Slides, and Calendar)",
+    "- *.atlassian.net/wiki/**, confluence URLs → use the 'atlassian-confluence' MCP tools",
+    "- bitbucket.org/**, *.bitbucket.org/** → use the 'bitbucket' MCP tools",
+    "When asked to read, edit, or interact with content from these services, prefer MCP tools over WebFetch or Bash commands."
+  ]
+}

@@ -1,0 +1,9 @@
+# Ghostty Configuration (used by cmux)
+# cmux is Ghostty-based and reads this config from ~/.config/ghostty/config
+# See: https://ghostty.org/docs/config
+
+font-family = JetBrainsMono Nerd Font
+font-size = 15
+theme = dark:one-dark,light:one-light
+window-padding-x = 4
+window-padding-y = 4

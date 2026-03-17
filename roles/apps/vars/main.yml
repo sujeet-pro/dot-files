@@ -4,8 +4,11 @@ vscode_settings_dir: "{{ home_dir }}/Library/Application Support/Code/User"
 vscode_extensions:
   - anthropic.claude-code
   - astro-build.astro-vscode
+  - biomejs.biome
   - bradlc.vscode-tailwindcss
+  - christian-kohler.path-intellisense
   - dbaeumer.vscode-eslint
+  - eamodio.gitlens
   - esbenp.prettier-vscode
   - github.copilot
   - github.copilot-chat
@@ -15,3 +18,16 @@ vscode_extensions:
   - pomdtr.excalidraw-editor
   - redhat.vscode-xml
   - tamasfe.even-better-toml
+  - usernamehw.errorlens
+  - yoavbls.pretty-ts-errors
+  - aaron-bond.better-comments
+  - editorconfig.editorconfig
+  - gruntfuggly.todo-tree
+  - inferrinizzard.prettier-sql-vscode
+  - jock.svg
+  - mechatroner.rainbow-csv
+  - mkhl.shfmt
+  - streetsidesoftware.code-spell-checker
+  - timonwong.shellcheck
+  - vitest.explorer
+  - vscode-icons-team.vscode-icons

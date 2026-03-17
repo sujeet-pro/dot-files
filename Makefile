@@ -1,4 +1,4 @@
-.PHONY: setup update check validate test test-vm help
+.PHONY: setup update check validate test test-vm cleanup help
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -8,7 +8,10 @@ setup: ## Full bootstrap from scratch (setup.sh)
 
 update: ## Update packages and re-run playbook
 	brew update
-	source ~/.zshenv && ansible-playbook setup.yml
+	source ~/.zshenv && ansible-playbook setup.yml --ask-become-pass
+
+cleanup: ## Detect unmanaged packages and offer to add/remove them
+	./setup.sh --cleanup
 
 check: ## Dry-run: show what would change without applying
 	source ~/.zshenv && ansible-playbook setup.yml --check --diff
