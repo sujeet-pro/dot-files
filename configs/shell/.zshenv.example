@@ -27,10 +27,26 @@ export SSH_WORK_KEY="id_ed25519_work"
 # --- AWS (optional) ---
 # export AWS_DEFAULT_REGION="ap-south-1"
 
-# --- Bitbucket (optional — required for claude-devkit PR reviews) ---
-# export BITBUCKET_TOKEN=""
+# --- Claude Code Configuration ---
+# export CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000
+# export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 
-# --- Confluence (optional — required for claude-devkit doc operations) ---
-# export CONFLUENCE_BASE_URL=""
-# export CONFLUENCE_EMAIL=""
+# --- claude-devkit MCP Servers (optional — fill in for services you use) ---
+# Bitbucket: API credentials for PR reviews
+# export BITBUCKET_USERNAME=""
+# export BITBUCKET_TOKEN=""
+# Confluence: API Token for document operations
+# export CONFLUENCE_URL=""
+# export CONFLUENCE_USERNAME=""
 # export CONFLUENCE_API_TOKEN=""
+# Google Drive: OAuth credentials (run scripts/setup-google-drive.sh after setting these)
+# export GOOGLE_MCP_CLIENT_ID=""
+# export GOOGLE_MCP_CLIENT_SECRET=""
+# export GOOGLE_DRIVE_OAUTH_CREDENTIALS="$HOME/.config/google-drive-mcp/gcp-oauth.keys.json"
+
+# --- Statsig (optional) ---
+# export STATSIG_CONSOLE_API_KEY=""
+
+# --- Datadog (optional) ---
+# export DATADOG_APP_KEY=""
+# export DATADOG_API_KEY=""
