@@ -27,19 +27,18 @@ export SSH_WORK_KEY="id_ed25519_work"
 # --- AWS (optional) ---
 # export AWS_DEFAULT_REGION="ap-south-1"
 
-# --- Claude Code Configuration ---
-# export CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000
-# export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-
-# --- claude-devkit MCP Servers (optional — fill in for services you use) ---
-# Bitbucket: API credentials for PR reviews
-# export BITBUCKET_USERNAME=""
-# export BITBUCKET_TOKEN=""
-# Confluence: API Token for document operations
+# === Confluence MCP (mcp-atlassian) ===
 # export CONFLUENCE_URL=""
 # export CONFLUENCE_USERNAME=""
 # export CONFLUENCE_API_TOKEN=""
-# Google Drive: OAuth credentials (run scripts/setup-google-drive.sh after setting these)
+
+# === Bitbucket MCP (bitbucket-mcp) ===
+# export BITBUCKET_URL="https://api.bitbucket.org/2.0"
+# export BITBUCKET_USERNAME=""
+# export BITBUCKET_WORKSPACE=""
+# export BITBUCKET_TOKEN=""
+
+# === Google Drive MCP (google-drive-mcp) ===
 # export GOOGLE_MCP_CLIENT_ID=""
 # export GOOGLE_MCP_CLIENT_SECRET=""
 # export GOOGLE_DRIVE_OAUTH_CREDENTIALS="$HOME/.config/google-drive-mcp/gcp-oauth.keys.json"
@@ -47,6 +46,11 @@ export SSH_WORK_KEY="id_ed25519_work"
 # --- Statsig (optional) ---
 # export STATSIG_CONSOLE_API_KEY=""
 
+# --- Claude Code Configuration ---
+# export CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000
+# export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+
 # --- Datadog (optional) ---
 # export DATADOG_APP_KEY=""
 # export DATADOG_API_KEY=""
+# export DATADOG_KEY_ID=""
