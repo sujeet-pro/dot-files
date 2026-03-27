@@ -44,17 +44,17 @@ homebrew_formulae:
   - docker-compose
 
   # Cloud & infra
-  - cloudflare-wrangler
   - k6
+
+  # Diagram tools
+  - graphviz
 
   # AI tools
   - gemini-cli
 
 # Formulae to remove as part of migration/cleanup
 homebrew_formulae_absent:
-  - fnm
   - go
-  - httpie
 
 # Homebrew GUI applications (casks)
 homebrew_casks:
@@ -90,7 +90,6 @@ homebrew_casks:
   - logi-options+
   - raycast
   - notion
-  - nordlayer
 
   # Fonts
   - font-jetbrains-mono
@@ -100,5 +99,3 @@ homebrew_casks:
 homebrew_casks_absent:
   - ghostty
   - httpie-desktop
-  - maccy
-  - rectangle

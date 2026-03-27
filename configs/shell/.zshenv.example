@@ -24,12 +24,16 @@ export SSH_WORK_KEY="id_ed25519_work"
 # export OPENAI_API_KEY=""
 # export GEMINI_API_KEY=""
 
+# === GitHub MCP (github/github-mcp-server) ===
+# export GITHUB_PERSONAL_ACCESS_TOKEN=""
+# export GITHUB_HOST=""
+
 # --- AWS (optional) ---
 # export AWS_DEFAULT_REGION="ap-south-1"
 
 # === Confluence MCP (mcp-atlassian) ===
-# export CONFLUENCE_URL=""
-# export CONFLUENCE_USERNAME=""
+# export CONFLUENCE_BASE_URL=""
+# export CONFLUENCE_EMAIL=""
 # export CONFLUENCE_API_TOKEN=""
 
 # === Bitbucket MCP (bitbucket-mcp) ===
