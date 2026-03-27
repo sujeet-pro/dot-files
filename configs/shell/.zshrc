@@ -221,3 +221,6 @@ fi
 
 # Added by Antigravity
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+
+# bun completions
+[ -s "/Users/sujeet/.bun/_bun" ] && source "/Users/sujeet/.bun/_bun"

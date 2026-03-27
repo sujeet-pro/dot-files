@@ -162,7 +162,7 @@ Then SSH in with `ssh admin@<VM_IP>` (password: `admin`).
 | Shell plugins | zsh-autosuggestions, zsh-syntax-highlighting |
 | Dev tools | actionlint, buf, gh, git-delta, gitleaks, hyperfine, lazygit, pre-commit, protobuf, shellcheck, trivy, watchexec, zizmor |
 | Containers | colima, docker, docker-buildx, docker-compose |
-| Cloud & infra | cloudflare-wrangler, k6 |
+| Cloud & infra | k6 |
 | AI | gemini-cli |
 
 ### Language SDKs (mise)
