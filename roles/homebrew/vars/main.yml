@@ -19,6 +19,7 @@ homebrew_formulae:
   - tree
   - zoxide
   - zsh-autosuggestions
+  - uv
   - zsh-syntax-highlighting
   - btop
 
@@ -44,7 +45,13 @@ homebrew_formulae:
   - docker-compose
 
   # Cloud & infra
+  - cloudflare-wrangler
   - k6
+
+  # Data & text processing
+  - sd
+  - tokei
+  - yq
 
   # Diagram tools
   - graphviz
@@ -82,9 +89,19 @@ homebrew_casks:
 
   # Terminal
   - cmux
+  - wave
+
+  # Browsers
+  - firefox
+  - google-chrome
 
   # Communication
+  - slack
+  - whatsapp
   - zoom
+
+  # Security
+  - bitwarden
 
   # Utilities
   - logi-options+

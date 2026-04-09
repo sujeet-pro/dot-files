@@ -10,6 +10,9 @@
 # NEVER commit ~/.zshenv — it contains personal data and secrets.
 ########################################
 
+# --- mise shims (makes mise-managed tools available to GUI apps) ---
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+
 # --- Git Config ---
 export GIT_USER_NAME="Your Name"
 export GIT_PERSONAL_EMAIL="you@example.com"

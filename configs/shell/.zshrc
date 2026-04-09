@@ -174,6 +174,8 @@ if command -v aichat &>/dev/null; then
 fi
 if command -v claude &>/dev/null; then
   alias cc="claude --dangerously-skip-permissions"
+  alias cc-dev='claude --dangerously-skip-permissions --plugin-dir ~/personal/agents-devkit'
+
 fi
 if command -v agents &>/dev/null; then
   alias cursor-cli="agents"
@@ -224,3 +226,6 @@ export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
 # bun completions
 [ -s "/Users/sujeet/.bun/_bun" ] && source "/Users/sujeet/.bun/_bun"
+
+# Vite+ bin (https://viteplus.dev)
+. "$HOME/.vite-plus/env"

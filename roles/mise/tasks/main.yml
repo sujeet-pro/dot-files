@@ -31,6 +31,14 @@
   changed_when: false
   tags: [mise, install]
 
+- name: Regenerate mise shims for all installed tools
+  ansible.builtin.command:
+    cmd: "{{ brew_prefix.stdout }}/bin/mise reshim"
+  environment:
+    MISE_GLOBAL_CONFIG_FILE: "{{ home_dir }}/.config/mise/config.toml"
+  changed_when: false
+  tags: [mise, install]
+
 - name: Install global npm packages via mise-managed Node
   ansible.builtin.command:
     cmd: "{{ brew_prefix.stdout }}/bin/mise exec -- npm install -g {{ item }}"

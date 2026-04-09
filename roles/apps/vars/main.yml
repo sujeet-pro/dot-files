@@ -8,7 +8,6 @@ vscode_extensions:
   - bradlc.vscode-tailwindcss
   - christian-kohler.path-intellisense
   - eamodio.gitlens
-  - github.copilot
   - github.copilot-chat
   - google.geminicodeassist
   - humao.rest-client
@@ -18,6 +17,8 @@ vscode_extensions:
   - tamasfe.even-better-toml
   - usernamehw.errorlens
   - yoavbls.pretty-ts-errors
+  - dbaeumer.vscode-eslint
+  - esbenp.prettier-vscode
   - aaron-bond.better-comments
   - editorconfig.editorconfig
   - gruntfuggly.todo-tree
