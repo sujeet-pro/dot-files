@@ -1,0 +1,6 @@
+{
+  displayName: 'Shell',
+  description: 'Shell configuration, aliases, and prompt setup.',
+  orderBy: 'manual',
+  items: ['overview', 'shortcuts', 'prompt'],
+}

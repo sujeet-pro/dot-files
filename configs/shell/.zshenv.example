@@ -13,6 +13,10 @@
 # --- mise shims (makes mise-managed tools available to GUI apps) ---
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 
+# --- Default editor & visual ---
+export EDITOR="zed --wait"
+export VISUAL="zed --wait"
+
 # --- Git Config ---
 export GIT_USER_NAME="Your Name"
 export GIT_PERSONAL_EMAIL="you@example.com"
@@ -27,16 +31,18 @@ export SSH_WORK_KEY="id_ed25519_work"
 # export OPENAI_API_KEY=""
 # export GEMINI_API_KEY=""
 
-# === GitHub MCP (github/github-mcp-server) ===
-# export GITHUB_PERSONAL_ACCESS_TOKEN=""
-# export GITHUB_HOST=""
+# === GitHub ===
+# export GITHUB_PAT=""
+
+# === NPM ===
+# export NPM_TOKEN=""
 
 # --- AWS (optional) ---
 # export AWS_DEFAULT_REGION="ap-south-1"
 
 # === Confluence MCP (mcp-atlassian) ===
-# export CONFLUENCE_BASE_URL=""
-# export CONFLUENCE_EMAIL=""
+# export CONFLUENCE_URL=""
+# export CONFLUENCE_USERNAME=""
 # export CONFLUENCE_API_TOKEN=""
 
 # === Bitbucket MCP (bitbucket-mcp) ===

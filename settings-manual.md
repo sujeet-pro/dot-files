@@ -22,6 +22,14 @@ These are deployed by your organization's IT/MDM and should NOT be added to dotf
 | AWS VPN Client | VPN access |
 | Falcon (CrowdStrike) | Endpoint security |
 
+## Default Applications (set by Ansible)
+
+| Type | Application | Set via |
+|------|-------------|---------|
+| Default browser | Google Chrome | macOS LaunchServices (automated) |
+| Default terminal | Ghostty | macOS LaunchServices handler (automated) |
+| Default editor | Zed | `EDITOR`/`VISUAL` env vars in `~/.zshenv` |
+
 ## Manual Configuration Steps
 
 ### Raycast
@@ -48,9 +56,19 @@ These are deployed by your organization's IT/MDM and should NOT be added to dotf
 - Already configured via `.zshrc` env source
 - Login/setup must be done manually
 
+### Claude Code
+- Settings are managed by this repo (`configs/claude/settings.json`)
+- MCP server configs, skills, and agents are managed separately (not by this repo)
+- Global `CLAUDE.md` is user-specific and not tracked
+
+### Zoom
+- Sign in after installation
+- Configure audio/video settings manually
+
+### Bruno
+- API collections are per-project and not tracked here
+
 ### macOS System Settings (not yet automated)
-- Keyboard repeat rate and delay
-- Trackpad speed and gesture preferences
 - Desktop & Dock hot corners
 - Accessibility settings
 - Login items (which apps start at login)
@@ -66,7 +84,7 @@ These are deployed by your organization's IT/MDM and should NOT be added to dotf
 - Not currently automated in the Ansible roles
 
 ### Browser Extensions
-- Install browser extensions manually (1Password, Bitwarden, uBlock Origin, etc.)
+- Install browser extensions manually (Bitwarden, uBlock Origin, etc.)
 - Browser sync may handle this if signed in
 
 ### App Store Apps

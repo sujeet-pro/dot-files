@@ -297,6 +297,20 @@
     value: "{{ not chrome_disable_swipe_navigation }}"
   tags: [macos, defaults, chrome]
 
+# ---- Default Applications ----
+# Note: Setting default browser and terminal handler reliably requires
+# user interaction (macOS prompts for confirmation). Chrome and Ghostty
+# are already registered on this system. If they need to be reset:
+#   - Browser: Open Chrome > Settings > Default browser > Make default
+#   - Terminal: Ghostty registers as handler on first launch
+
+- name: Remind user about default applications
+  ansible.builtin.debug:
+    msg: >
+      Default apps: Chrome (browser), Ghostty (terminal), Zed (editor via $EDITOR).
+      If Chrome is not your default browser, set it via Chrome > Settings > Default browser.
+  tags: [macos, defaults]
+
 # ---- Apply changes ----
 
 - name: Restart Dock to apply changes

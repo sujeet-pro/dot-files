@@ -24,6 +24,7 @@
   community.general.homebrew_cask:
     name: "{{ item }}"
     state: present
+    accept_external_apps: true
   loop: "{{ homebrew_casks }}"
   ignore_errors: true
   tags: [homebrew, casks]
@@ -36,8 +37,3 @@
   ignore_errors: true
   tags: [homebrew, casks, cleanup]
 
-- name: Install fzf key bindings
-  ansible.builtin.command:
-    cmd: "{{ brew_prefix.stdout }}/opt/fzf/install --key-bindings --completion --no-update-rc"
-    creates: "{{ home_dir }}/.fzf.zsh"
-  tags: [homebrew, fzf]

@@ -84,6 +84,7 @@
     ci = commit
     lg = log --oneline --graph --decorate --all
     ll = log --oneline --decorate --graph --all --date=relative
+    dft = "!f() { GIT_EXTERNAL_DIFF=difft git diff \"$@\"; }; f"
 
 ########################################
 # 8. Conditional includes for work/personal

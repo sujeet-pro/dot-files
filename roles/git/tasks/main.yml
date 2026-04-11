@@ -19,3 +19,11 @@
     dest: "{{ home_dir }}/.gitconfig-work"
     mode: "0644"
   tags: [git, gitconfig]
+
+- name: Symlink work gitignore (ignores mise files in ~/work repos)
+  ansible.builtin.file:
+    src: "{{ dotfiles_repo }}/configs/git/gitignore-work"
+    dest: "{{ home_dir }}/.gitignore-work"
+    state: link
+    force: true
+  tags: [git, gitconfig]

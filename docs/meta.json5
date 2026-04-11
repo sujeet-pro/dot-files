@@ -1,0 +1,5 @@
+{
+  displayName: 'Dot Files',
+  orderBy: 'manual',
+  items: ['guide', 'tools', 'shell', 'reference'],
+}

@@ -12,3 +12,7 @@
 
 # Claude machine-specific local settings
 configs/claude/settings.local.json
+
+# Docs build output
+dist/
+node_modules/

@@ -89,11 +89,10 @@
             - Set up SSH keys for GitHub/Bitbucket
             - Configure AWS credentials
             - Add personal SSH hosts to ~/.ssh/config.local
-            - Sign in to applications
-
-          Claude Code configuration:
-            Claude settings, skills, agents, and MCP integrations
-            are managed by claude-devkit (not this repo).
-            See: ~/personal/claude-devkit/README.md
+            - Sign in to applications (Zoom, Slack, Bitwarden, etc.)
+            - Add Raycast script commands directory:
+              Extensions > Script Commands > Add Script Directory
+              > ~/.config/raycast/script-commands
+            - Set Chrome as default browser (if not already)
           ============================================
       tags: [always]

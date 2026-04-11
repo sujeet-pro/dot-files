@@ -1,3 +1,4 @@
+SHELL := /bin/zsh
 .PHONY: setup update check validate test test-vm cleanup help
 
 help: ## Show this help
@@ -8,13 +9,13 @@ setup: ## Full bootstrap from scratch (setup.sh)
 
 update: ## Update packages and re-run playbook
 	brew update
-	source ~/.zshenv && ansible-playbook setup.yml --ask-become-pass
+	. ~/.zshenv && ansible-playbook setup.yml --ask-become-pass
 
 cleanup: ## Detect unmanaged packages and offer to add/remove them
 	./setup.sh --cleanup
 
 check: ## Dry-run: show what would change without applying
-	source ~/.zshenv && ansible-playbook setup.yml --check --diff
+	. ~/.zshenv && ansible-playbook setup.yml --check --diff
 
 validate: ## Quick validation of tools, configs, symlinks, and env vars
 	@bash scripts/validate.sh

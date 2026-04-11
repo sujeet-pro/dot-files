@@ -37,7 +37,7 @@ parse_yaml_list() {
   awk -v key="${key}:" '
     $0 ~ "^"key { found=1; next }
     found && /^[a-zA-Z_]/ { exit }
-    found && /^  - / { sub(/^  - /, ""); print }
+    found && /^  - / { sub(/^  - /, ""); sub(/[[:space:]]*#.*$/, ""); if ($0 != "") print }
   ' "$file"
 }
 
@@ -91,6 +91,14 @@ if ! command -v ansible-playbook &>/dev/null; then
   brew install ansible
 else
   echo -e "${GREEN}✓ Ansible installed${NC}"
+fi
+
+# 3b. Ansible community.general collection (provides homebrew, osx_defaults modules)
+if ! ansible-galaxy collection list 2>/dev/null | grep -q community.general; then
+  echo -e "${YELLOW}Installing Ansible community.general collection...${NC}"
+  ansible-galaxy collection install community.general
+else
+  echo -e "${GREEN}✓ Ansible community.general collection installed${NC}"
 fi
 
 # 4. ~/.zshenv

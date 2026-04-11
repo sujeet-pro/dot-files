@@ -1,0 +1,6 @@
+{
+  displayName: 'Guide',
+  description: 'Step-by-step guides for setting up and using the dot-files repo.',
+  orderBy: 'manual',
+  items: ['getting-started', 'configuration', 'customization'],
+}

@@ -57,3 +57,7 @@ safari_developer_menu: true
 
 # Chrome
 chrome_disable_swipe_navigation: true
+
+# Default applications
+default_browser: com.google.chrome
+default_terminal: com.mitchellh.ghostty

@@ -1,5 +1,5 @@
 {
-  "editor.fontFamily": "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontFamily": "'JetBrainsMono Nerd Font', Menlo, Monaco, 'Courier New', monospace",
   "editor.fontSize": 16,
   "editor.formatOnSave": true,
   "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font'",

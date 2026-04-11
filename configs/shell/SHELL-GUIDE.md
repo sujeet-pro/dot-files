@@ -9,17 +9,18 @@ Quick reference for all productivity tools and keybindings configured in this sh
 | **zsh** | Shell with completions, history sharing, fuzzy matching | `~/.zshrc` |
 | **starship** | Fast, git-aware prompt with language indicators | `~/.config/starship.toml` |
 | **fzf** | Fuzzy finder for files, history, and directories | Integrated in `.zshrc` |
-| **fd** | Fast file finder (modern `find`), feeds into fzf | Used as fzf backend |
 | **bat** | Syntax-highlighted `cat` with line numbers | Aliased as `cat` |
 | **eza** | Modern `ls` with icons and tree view | Aliased as `ll`, `tree` |
 | **zoxide** | Smart `cd` that learns your most-used directories | Replaces `cd` |
 | **atuin** | Enhanced shell history with full-text search | Replaces Ctrl+R |
 | **delta** | Syntax-highlighted git diffs with side-by-side view | Git pager |
+| **difftastic** | Structural/AST-aware diffs (ignores formatting changes) | Git alias `dft` |
 | **lazygit** | Terminal UI for git operations | Aliased as `lg` |
 | **ripgrep** | Fast code search (modern `grep`) | `rg` command |
 | **jq** | JSON processor and pretty-printer | Aliased as `json` |
-| **direnv** | Auto-loads `.envrc` files per directory | Hook in `.zshrc` |
-| **mise** | Runtime/tool version manager (node, python, go, etc.) | `~/.config/mise/config.toml` |
+| **yq** | YAML processor (jq for YAML) | `yq` command |
+| **hurl** | Plain-text HTTP test runner for CI | `.hurl` files in repos |
+| **mise** | Runtime/tool version manager (node, python, java, etc.) | `~/.config/mise/config.toml` |
 
 ## Keyboard Shortcuts
 
@@ -29,7 +30,6 @@ Quick reference for all productivity tools and keybindings configured in this sh
 |----------|--------|
 | `Ctrl+R` | Fuzzy search command history (enhanced by atuin) |
 | `Ctrl+T` | Fuzzy search files in current directory (with bat preview) |
-| `Alt+C` | Fuzzy search and cd into directories (with tree preview) |
 | `**<Tab>` | Inline fuzzy completion (e.g., `cd **<Tab>`, `vim **<Tab>`) |
 
 ### Atuin (Shell History)
@@ -64,7 +64,7 @@ Quick reference for all productivity tools and keybindings configured in this sh
 
 | Alias | Command | Description |
 |-------|---------|-------------|
-| `ll` | `eza -lah --icons` | Detailed file listing with icons |
+| `ll` | `eza -lah --icons --git` | Detailed file listing with icons |
 | `la` | `eza -a --icons` | Show all files with icons |
 | `lt` | `eza -lah --icons --sort=modified` | List files sorted by modification time |
 | `tree` | `eza --tree --level=2 --icons` | Tree view (2 levels deep) |
@@ -86,14 +86,40 @@ Quick reference for all productivity tools and keybindings configured in this sh
 | Alias | Command | Description |
 |-------|---------|-------------|
 | `gs` | `git status` | Short status |
-| `gl` | `git log --oneline --graph --decorate` | Compact log with graph |
+| `gp` | `git push` | Push |
+| `gpl` | `git pull` | Pull |
+| `gc` | `git commit` | Commit |
+| `ga` | `git add` | Stage files |
 | `gd` | `git diff` | Show unstaged changes |
 | `gds` | `git diff --stat` | Diff summary (files changed) |
 | `gdc` | `git diff --cached` | Show staged changes |
+| `glog` | `git log --oneline --graph --decorate` | Compact log with graph |
 | `gcl` | `git checkout $(branch \| fzf)` | Fuzzy-select local branch to checkout |
 | `gcr` | `git checkout $(branch -r \| fzf)` | Fuzzy-select remote branch to checkout |
 | `gbd` | `git branch \| fzf -m \| xargs git branch -d` | Fuzzy multi-select branches to delete |
 | `lg` | `lazygit` | Open lazygit terminal UI |
+| `git dft` | `difftastic` | Structural diff (ignores formatting) |
+
+### Kubernetes
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `k` | `kubectl` | Short kubectl |
+| `kg` | `kubectl get` | Get resources |
+| `kga` | `kubectl get all -A` | Get all resources across namespaces |
+| `klo` | `kubectl logs -f` | Follow logs |
+| `kctx` | `kubectl config use-context` | Switch context |
+| `kns` | `kubectl config set-context --current --namespace` | Switch namespace |
+
+### Docker
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `dps` | `docker ps` | Running containers |
+| `dpsa` | `docker ps -a` | All containers |
+| `di` | `docker images` | List images |
+| `dex` | `docker exec -it` | Exec into container |
+| `dlogs` | `docker logs -f` | Follow container logs |
 
 ### Frontend Development
 
@@ -109,16 +135,23 @@ Quick reference for all productivity tools and keybindings configured in this sh
 
 | Alias | Command | Description |
 |-------|---------|-------------|
-| `ai` / `aie` | `aichat -e` | Quick AI chat in terminal |
+| `cc` | `claude --dangerously-skip-permissions` | Quick Claude Code session |
 | `aws-whoami` | `aws sts get-caller-identity` | Check current AWS identity |
+| `reload` | `source ~/.zshrc` | Reload shell config |
 
-## Git Integration (delta)
+## Git Integration (delta + difftastic)
 
-All `git diff`, `git log -p`, and `git show` output is automatically rendered with:
+All `git diff`, `git log -p`, and `git show` output is automatically rendered with delta:
 - Syntax highlighting
 - Side-by-side view
 - Line numbers
 - Hyperlinks to files
+
+For structural diffs that ignore formatting, use `git dft`:
+```sh
+git dft           # diff working tree
+git dft --staged  # diff staged changes
+```
 
 Navigate delta output:
 | Key | Action |
@@ -168,7 +201,7 @@ The prompt shows context-aware information:
 | `⇕` | Diverged from remote |
 | `⚑` | Stashed changes |
 
-Language versions (Node, Bun, Python, Go, Java, Kotlin) appear automatically when relevant project files are detected.
+Language versions (Node, Bun, Python, Java) appear automatically when relevant project files are detected.
 
 ## Productivity Tips
 
@@ -179,6 +212,6 @@ Language versions (Node, Bun, Python, Go, Java, Kotlin) appear automatically whe
 5. **Check API responses**: `curl -s api/endpoint | json`
 6. **Kill stuck dev server**: `killport 3000`
 7. **Browse project scripts**: `scripts` in any npm project
-8. **Benchmark a command**: `hyperfine 'npm run build' 'bun run build'`
-9. **Watch files for changes**: `watchexec -e ts,tsx -- npm test`
-10. **Search code fast**: `rg "TODO" --type ts` or `rg "function.*fetch" -g "*.tsx"`
+8. **Search code fast**: `rg "TODO" --type ts` or `rg "function.*fetch" -g "*.tsx"`
+9. **Structural diff**: `git dft` to see meaningful changes, ignoring whitespace/formatting
+10. **Test APIs in CI**: Create `.hurl` files with request/response assertions

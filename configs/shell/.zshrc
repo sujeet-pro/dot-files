@@ -1,4 +1,3 @@
-
 ########################################
 # ~/.zshrc - Shell configuration
 ########################################
@@ -37,11 +36,7 @@ if command -v mise &>/dev/null; then
   eval "$(mise activate zsh)"
 fi
 
-# --- direnv ------------------------------------------------------------------
-# direnv automatically loads environment variables from project directories.
-if command -v direnv &>/dev/null; then
-  eval "$(direnv hook zsh)"
-fi
+# Note: direnv is not used — mise handles env vars natively via [env] in .mise.toml
 
 ########################################
 # 3. Core Zsh behavior & history
@@ -52,16 +47,18 @@ bindkey -e
 
 # History file location and size.
 export HISTFILE="$HOME/.zsh_history"   # Where command history is stored.
-export HISTSIZE=50000                  # Number of lines kept in memory.
-export SAVEHIST=50000                  # Number of lines saved to HISTFILE.
+export HISTSIZE=1000000                # Number of lines kept in memory.
+export SAVEHIST=1000000                # Number of lines saved to HISTFILE.
 
 # History behavior tuning:
 setopt APPEND_HISTORY          # Append to the history file instead of overwriting it.
 setopt SHARE_HISTORY           # Share history across all open shell sessions.
 setopt INC_APPEND_HISTORY      # Write each command to history as soon as it is executed.
 setopt HIST_IGNORE_ALL_DUPS    # Remove older duplicates, keep only the latest command.
+setopt HIST_IGNORE_SPACE       # Don't save commands starting with a space.
 setopt HIST_REDUCE_BLANKS      # Strip superfluous whitespace before saving.
 setopt HIST_VERIFY             # After !-style expansion, let you edit before running.
+setopt HIST_FIND_NO_DUPS       # Don't display duplicates in history search.
 
 # Prefix-based history search with arrow keys:
 # Type the beginning of a command, then use Up/Down to cycle matching history entries.
@@ -76,9 +73,15 @@ bindkey '^[[B' history-beginning-search-forward    # Down arrow
 autoload -Uz compinit
 compinit
 
-# General completion styles:
+# Bash compat layer for aws_completer and similar tools
+autoload -Uz bashcompinit && bashcompinit
+
+# Completion styling
 zstyle ':completion:*' menu select           # Use a menu interface when multiple matches exist.
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|=*' 'l:|=*'  # Case-insensitive & fuzzy matches.
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*' squeeze-slashes true
 
 setopt COMPLETE_IN_WORD                      # Allow completion in the middle of words.
 setopt AUTO_MENU                             # Automatically show completion menu on repeated Tab.
@@ -93,17 +96,13 @@ if command -v fzf &>/dev/null; then
   # Load fzf Zsh integration (Ctrl+R for history, Ctrl+T for files, Alt+C for dirs).
   source <(fzf --zsh)
 
-  # Use fd as the default source for fzf (faster than find, respects .gitignore).
-  if command -v fd &>/dev/null; then
-    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-    export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
-  fi
+  export FZF_DEFAULT_COMMAND='git ls-files --cached --others --exclude-standard 2>/dev/null || find . -type f'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_DEFAULT_OPTS='--height 40% --reverse --border --ansi'
 
-  # Show syntax-highlighted file previews (requires bat) in Ctrl+T and Alt+C.
+  # Show syntax-highlighted file previews (requires bat) in Ctrl+T.
   if command -v bat &>/dev/null; then
     export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {}'"
-    export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --icons --color=always {}'"
   fi
 fi
 
@@ -134,8 +133,10 @@ fi
 
 # --- File listing (eza) ---
 if command -v eza &>/dev/null; then
-  alias ll="eza -lah --icons"
+  alias ls='eza'
+  alias ll="eza -lah --icons --git"
   alias la="eza -a --icons"
+  alias l="eza -a --icons --git"
   alias tree="eza --tree --level=2 --icons"
   alias lt="eza -lah --icons --sort=modified"
 else
@@ -149,33 +150,52 @@ alias ....="cd ../../.."
 
 # --- Git shortcuts ---
 alias gs="git status"
-alias gl="git log --oneline --graph --decorate"
+alias gp="git push"
+alias gpl="git pull"
+alias gc="git commit"
+alias ga="git add"
 alias gd="git diff"
 alias gds="git diff --stat"
 alias gdc="git diff --cached"
+alias glog="git log --oneline --graph --decorate"
 alias gcl='git checkout $(git branch | fzf | sed "s/^[* ]*//")'
 alias gcr='git checkout $(git branch -r | fzf | sed "s/^[* ]*//" | sed "s/origin\///")'
 alias gbd='git branch | fzf -m | xargs git branch -d'
 alias lg="lazygit"
 
+# --- Kubernetes shortcuts ---
+alias k='kubectl'
+alias kg='kubectl get'
+alias kga='kubectl get all -A'
+alias klo='kubectl logs -f'
+alias kctx='kubectl config use-context'
+alias kns='kubectl config set-context --current --namespace'
+alias kdesc='kubectl describe'
+alias kaf='kubectl apply -f'
+
+# --- Docker shortcuts ---
+alias dps='docker ps'
+alias dpsa='docker ps -a'
+alias di='docker images'
+alias dex='docker exec -it'
+alias dlogs='docker logs -f'
+
 # --- AWS shortcuts ---
 alias aws-whoami="aws sts get-caller-identity"
 
 # --- Frontend shortcuts ---
-alias scripts="jq '.scripts' package.json"
-alias deps="jq '.dependencies' package.json"
-alias devdeps="jq '.devDependencies' package.json"
+if command -v jq &>/dev/null; then
+  alias scripts="jq '.scripts' package.json"
+  alias deps="jq '.dependencies' package.json"
+  alias devdeps="jq '.devDependencies' package.json"
+  alias json="jq '.'"
+fi
 killport() { lsof -ti:"$1" | xargs kill -9; }
 
 # --- Tools shortcuts ---
-if command -v aichat &>/dev/null; then
-  alias ai="aichat -e"
-  alias aie="aichat -e"
-fi
 if command -v claude &>/dev/null; then
   alias cc="claude --dangerously-skip-permissions"
   alias cc-dev='claude --dangerously-skip-permissions --plugin-dir ~/personal/agents-devkit'
-
 fi
 if command -v agents &>/dev/null; then
   alias cursor-cli="agents"
@@ -187,9 +207,31 @@ if command -v bat &>/dev/null; then
   alias catp="bat --plain --paging=never"
 fi
 
-# --- JSON pretty-print ---
-if command -v jq &>/dev/null; then
-  alias json="jq '.'"
+# --- Misc ---
+alias reload='source ~/.zshrc'
+alias zshrc='$EDITOR ~/.zshrc'
+alias grep='grep --color=auto'
+
+# --- Lazy-loaded completions ---
+# kubectl — lazy load to avoid ~200ms startup cost
+function kubectl() {
+  if ! type __start_kubectl &>/dev/null; then
+    source <(command kubectl completion zsh)
+  fi
+  command kubectl "$@"
+}
+
+# helm completions (lazy)
+function helm() {
+  if ! type __start_helm &>/dev/null; then
+    source <(command helm completion zsh)
+  fi
+  command helm "$@"
+}
+
+# AWS completer
+if command -v aws_completer &>/dev/null; then
+  complete -C aws_completer aws
 fi
 
 ########################################
@@ -202,6 +244,10 @@ fi
 if [ -f "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
   source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 fi
+
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_USE_ASYNC=true
 
 # --- Starship prompt ---------------------------------------------------------
 # Starship is a fast, git-aware prompt written in Rust.
@@ -225,7 +271,7 @@ fi
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
 # bun completions
-[ -s "/Users/sujeet/.bun/_bun" ] && source "/Users/sujeet/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Vite+ bin (https://viteplus.dev)
-. "$HOME/.vite-plus/env"
+[ -f "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"

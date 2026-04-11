@@ -72,7 +72,7 @@ echo "=========================================="
 # --- Homebrew formulae ---
 echo ""
 echo "Homebrew CLI tools:"
-for cmd in actionlint aichat ansible atuin aws bat buf colima delta direnv docker eza fd fzf gh gitleaks hyperfine jq k6 lazygit mise pre-commit protoc rg shellcheck starship tldr tree trivy watchexec wrangler zizmor zoxide; do
+for cmd in ansible atuin aws bat btop colima delta difft docker eza fzf gh hurl jq kubectl helm lazygit mise rg shellcheck starship tldr yq zoxide; do
   check_command "$cmd"
 done
 
@@ -87,7 +87,7 @@ check_mise_tool() {
   fi
 }
 
-for tool in node bun yarn pnpm python uv go java kotlin; do
+for tool in node bun yarn python uv java; do
   check_mise_tool "$tool"
 done
 
@@ -105,7 +105,7 @@ done
 # --- Homebrew casks (check apps exist) ---
 echo ""
 echo "Homebrew casks (applications):"
-for app in "Cursor" "Visual Studio Code" "IntelliJ IDEA" "Zed" "Claude" "cmux" "Bruno" "zoom.us" "Raycast"; do
+for app in "Cursor" "Visual Studio Code" "IntelliJ IDEA" "Zed" "Claude" "cmux" "Ghostty" "Bruno" "zoom.us" "Raycast" "Google Chrome" "Firefox" "Notion" "Slack" "WhatsApp"; do
   if [ -d "/Applications/${app}.app" ]; then
     pass "$app"
   else
@@ -128,8 +128,11 @@ check_symlink "$HOME/.aws/config" ".aws/config"
 check_symlink "$HOME/.config/gh/config.yml" "gh/config.yml"
 check_symlink "$HOME/.config/zed/settings.json" "zed/settings.json"
 check_symlink "$HOME/.colima/default.yaml" ".colima/default.yaml"
-check_symlink "$HOME/.config/ghostty/config" "ghostty/config (cmux)"
+check_symlink "$HOME/.config/ghostty/config" "ghostty/config"
 check_symlink "$HOME/.config/btop/btop.conf" "btop/btop.conf"
+check_symlink "$HOME/.claude/settings.json" "claude/settings.json"
+check_file "$HOME/.config/raycast/script-commands" "raycast/script-commands"
+check_file "$HOME/.gitignore-work" ".gitignore-work"
 
 # --- VS Code ---
 echo ""
@@ -170,6 +173,16 @@ if [ "$DOCKER_CONTEXT" = "colima" ]; then
   pass "docker context = colima"
 else
   warn "docker context is $DOCKER_CONTEXT (expected colima)"
+fi
+
+# --- Font check ---
+echo ""
+echo "Fonts:"
+if [ -f "$HOME/Library/Fonts/JetBrainsMonoNerdFont-Regular.ttf" ] || \
+   fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd Font"; then
+  pass "JetBrainsMono Nerd Font installed"
+else
+  warn "JetBrainsMono Nerd Font — not detected"
 fi
 
 # --- macOS defaults ---

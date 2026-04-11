@@ -1,42 +1,36 @@
 ---
 # Homebrew CLI tools (formulae)
 homebrew_formulae:
-  # Core utilities
-  - aichat
-  - ansible
-  - atuin
-  - awscli
-  - bat
-  - direnv
-  - eza
-  - fd
-  - fzf
-  - jq
-  - mise
-  - ripgrep
-  - starship
-  - tlrc
-  - tree
-  - zoxide
+  # Core shell & prompt
+  - zsh
   - zsh-autosuggestions
-  - uv
+  - zsh-completions
   - zsh-syntax-highlighting
-  - btop
+  - starship
+  - fzf
+  - git
+
+  # Modern CLI replacements
+  - bat
+  - eza
+  - ripgrep
+  - tlrc
+  - zoxide
 
   # Dev tools
-  - actionlint
-  - git-delta
-  - gitleaks
-  - buf
+  - btop
+  - difftastic
   - gh
-  - hyperfine
+  - git-delta
+  - hurl
+  - jq
   - lazygit
-  - pre-commit
-  - protobuf
   - shellcheck
-  - trivy
-  - watchexec
-  - zizmor
+  - yq
+
+  # Infra & automation
+  - ansible
+  - mise
 
   # Container tools
   - colima
@@ -45,23 +39,22 @@ homebrew_formulae:
   - docker-compose
 
   # Cloud & infra
-  - cloudflare-wrangler
-  - k6
+  - awscli
+  - helm
+  - kubernetes-cli
 
-  # Data & text processing
-  - sd
-  - tokei
-  - yq
-
-  # Diagram tools
-  - graphviz
-
-  # AI tools
-  - gemini-cli
+  # Shell history
+  - atuin
 
 # Formulae to remove as part of migration/cleanup
 homebrew_formulae_absent:
-  - go
+  - go         # managed by mise if needed
+  - uv         # managed by mise, not brew
+  - direnv     # mise handles env vars natively
+  - tree       # aliased via eza --tree
+  - fd         # fzf works without it
+  - aichat     # using claude CLI instead
+  - gemini-cli # using claude CLI instead
 
 # Homebrew GUI applications (casks)
 homebrew_casks:
@@ -76,20 +69,16 @@ homebrew_casks:
   - antigravity
 
   # AI Tools
-  - chatgpt-atlas
   - claude
   - claude-code
-  - codex
-  - codex-app
-  - comet
   - cursor-cli
 
   # API clients
   - bruno
 
   # Terminal
+  - ghostty
   - cmux
-  - wave
 
   # Browsers
   - firefox
@@ -97,22 +86,18 @@ homebrew_casks:
 
   # Communication
   - slack
-  - whatsapp
   - zoom
-
-  # Security
-  - bitwarden
 
   # Utilities
   - logi-options+
-  - raycast
   - notion
+  - raycast
 
   # Fonts
-  - font-jetbrains-mono
   - font-jetbrains-mono-nerd-font
 
 # Casks to remove as part of migration/cleanup
 homebrew_casks_absent:
-  - ghostty
   - httpie-desktop
+  - wave            # using ghostty + cmux
+  - font-jetbrains-mono  # nerd font variant covers this
