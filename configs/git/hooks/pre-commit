@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+########################################
+# Global pre-commit hook — email identity guard
+#
+# Ensures the configured user.email matches what's expected
+# based on the remote URL. Blocks commits on mismatch.
+#
+# This file is managed by dotfiles. Do not edit directly.
+# Source: configs/git/hooks/pre-commit
+########################################
+
+set -euo pipefail
+
+WORK_EMAIL="${GIT_WORK_EMAIL:-}"
+PERSONAL_EMAIL="${GIT_PERSONAL_EMAIL:-}"
+CURRENT_EMAIL="$(git config user.email 2>/dev/null || echo "")"
+
+# If env vars aren't set, skip validation
+if [[ -z "$WORK_EMAIL" || -z "$PERSONAL_EMAIL" ]]; then
+    exit 0
+fi
+
+# Collect all remote URLs
+REMOTE_URLS="$(git remote -v 2>/dev/null | awk '{print $2}' | sort -u)"
+
+# Determine expected email based on remote URLs
+EXPECTED_EMAIL=""
+MATCH_REASON=""
+
+if [[ -z "$REMOTE_URLS" ]]; then
+    # No remotes (fresh git init) — allow the noreply/personal email only
+    EXPECTED_EMAIL="$PERSONAL_EMAIL"
+    MATCH_REASON="no remote configured (fresh repo)"
+else
+    # Check work org patterns from env vars
+    WORK_GITHUB_ORGS="${GIT_WORK_GITHUB_ORGS:-}"
+    WORK_BITBUCKET_ORGS="${GIT_WORK_BITBUCKET_ORGS:-}"
+
+    is_work_repo=false
+
+    # Check GitHub orgs
+    if [[ -n "$WORK_GITHUB_ORGS" ]]; then
+        IFS=',' read -ra gh_orgs <<< "$WORK_GITHUB_ORGS"
+        for org in "${gh_orgs[@]}"; do
+            org="$(echo "$org" | xargs)"  # trim whitespace
+            [[ -z "$org" ]] && continue
+            if echo "$REMOTE_URLS" | grep -qiE "github\.com[:/]${org}/"; then
+                is_work_repo=true
+                MATCH_REASON="remote matches GitHub org '$org'"
+                break
+            fi
+        done
+    fi
+
+    # Check Bitbucket orgs
+    if [[ "$is_work_repo" == false && -n "$WORK_BITBUCKET_ORGS" ]]; then
+        IFS=',' read -ra bb_orgs <<< "$WORK_BITBUCKET_ORGS"
+        for org in "${bb_orgs[@]}"; do
+            org="$(echo "$org" | xargs)"  # trim whitespace
+            [[ -z "$org" ]] && continue
+            if echo "$REMOTE_URLS" | grep -qiE "bitbucket\.org[:/]${org}/"; then
+                is_work_repo=true
+                MATCH_REASON="remote matches Bitbucket workspace '$org'"
+                break
+            fi
+        done
+    fi
+
+    if [[ "$is_work_repo" == true ]]; then
+        EXPECTED_EMAIL="$WORK_EMAIL"
+    else
+        EXPECTED_EMAIL="$PERSONAL_EMAIL"
+        MATCH_REASON="remote does not match any work org"
+    fi
+fi
+
+# Validate
+if [[ "$CURRENT_EMAIL" != "$EXPECTED_EMAIL" ]]; then
+    echo ""
+    echo "ERROR: Git email mismatch — commit blocked"
+    echo ""
+    echo "  Current email:  $CURRENT_EMAIL"
+    echo "  Expected email: $EXPECTED_EMAIL"
+    echo "  Reason:         $MATCH_REASON"
+    echo ""
+    echo "  Fix with:"
+    echo "    git config user.email \"$EXPECTED_EMAIL\""
+    echo ""
+    exit 1
+fi

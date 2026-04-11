@@ -1,0 +1,41 @@
+# User Scripts
+
+Portable CLI scripts managed by this dotfiles repo. Each script is symlinked to
+`~/.local/bin/<script-name>` so it's available from any directory.
+
+## Structure
+
+```
+user_scripts/
+├── README.md
+├── <script-file>.sh              # Simple single-file script
+├── <script-name>/                # Multi-file script
+│   ├── index.sh (or index.py)    # Entry point (this gets symlinked)
+│   └── ...                       # Supporting files
+```
+
+### Rules
+
+1. **Single-file scripts** — place directly as `user_scripts/<name>.sh`
+2. **Multi-file scripts** — create a folder `user_scripts/<name>/` with an `index.sh`
+   (or `index.py`) as the entry point
+3. **Config** goes in `~/.config/user_scripts/<script-name>.json5` (never in the repo)
+4. Scripts must be executable (`chmod +x`)
+5. Entry points should have a shebang line (`#!/usr/bin/env bash` or `#!/usr/bin/env python3`)
+
+### Adding a new script
+
+1. Create the file or folder under `user_scripts/`
+2. Run `make update` — the Ansible role auto-discovers and symlinks everything
+3. Validation is included in `make validate`
+
+### Config convention
+
+Scripts that need persistent config should use:
+
+```
+Default:  ~/.config/user_scripts/<script-name>.json5
+Override: --config /path/to/custom-config.json5
+```
+
+The `~/.config/user_scripts/` directory is created automatically by the Ansible role.

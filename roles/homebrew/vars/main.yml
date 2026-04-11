@@ -9,6 +9,7 @@ homebrew_formulae:
   - starship
   - fzf
   - git
+  - git-filter-repo
 
   # Modern CLI replacements
   - bat

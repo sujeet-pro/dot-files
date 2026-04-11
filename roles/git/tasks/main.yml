@@ -1,4 +1,11 @@
 ---
+- name: Ensure ~/.config/git-configs directory exists
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.config/git-configs"
+    state: directory
+    mode: "0755"
+  tags: [git, gitconfig]
+
 - name: Render .gitconfig from template
   ansible.builtin.template:
     src: gitconfig.j2
@@ -6,18 +13,27 @@
     mode: "0644"
   tags: [git, gitconfig]
 
-- name: Render .gitconfig-personal from template
+- name: Render personal gitconfig from template
   ansible.builtin.template:
     src: gitconfig-personal.j2
-    dest: "{{ home_dir }}/.gitconfig-personal"
+    dest: "{{ home_dir }}/.config/git-configs/personal.gitconfig"
     mode: "0644"
   tags: [git, gitconfig]
 
-- name: Render .gitconfig-work from template
+- name: Render work gitconfig from template
   ansible.builtin.template:
     src: gitconfig-work.j2
-    dest: "{{ home_dir }}/.gitconfig-work"
+    dest: "{{ home_dir }}/.config/git-configs/work.gitconfig"
     mode: "0644"
+  tags: [git, gitconfig]
+
+- name: Remove old gitconfig files from home directory
+  ansible.builtin.file:
+    path: "{{ home_dir }}/{{ item }}"
+    state: absent
+  loop:
+    - .gitconfig-personal
+    - .gitconfig-work
   tags: [git, gitconfig]
 
 - name: Symlink work gitignore (ignores mise files in ~/work repos)
@@ -27,3 +43,18 @@
     state: link
     force: true
   tags: [git, gitconfig]
+
+- name: Ensure ~/.git-hooks directory exists
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.git-hooks"
+    state: directory
+    mode: "0755"
+  tags: [git, gitconfig, githooks]
+
+- name: Symlink global pre-commit hook
+  ansible.builtin.file:
+    src: "{{ dotfiles_repo }}/configs/git/hooks/pre-commit"
+    dest: "{{ home_dir }}/.git-hooks/pre-commit"
+    state: link
+    force: true
+  tags: [git, gitconfig, githooks]

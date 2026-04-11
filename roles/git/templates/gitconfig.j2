@@ -15,6 +15,7 @@
 
 [user]
     name = {{ git_user_name }}
+    email = {{ git_personal_email }}
 
 ########################################
 # 2. Default branch name for new repos
@@ -46,6 +47,7 @@
 [core]
     filemode = false
     pager = delta
+    hooksPath = ~/.git-hooks
 
 [interactive]
     diffFilter = delta --color-only
@@ -87,14 +89,38 @@
     dft = "!f() { GIT_EXTERNAL_DIFF=difft git diff \"$@\"; }; f"
 
 ########################################
-# 8. Conditional includes for work/personal
+# 8. Conditional includes
+#    - Directory-based: for repos under ~/work/ and ~/personal/
+#    - Remote URL-based: for work repos cloned outside ~/work/
 ########################################
 
+# --- Directory-based includes ---
+
 [includeIf "gitdir:~/work/"]
-    path = ~/.gitconfig-work
+    path = ~/.config/git-configs/work.gitconfig
 
 [includeIf "gitdir:~/personal/"]
-    path = ~/.gitconfig-personal
+    path = ~/.config/git-configs/personal.gitconfig
+
+# --- Remote URL-based includes (GitHub orgs) ---
+{% for org in git_work_github_orgs.split(',') | map('trim') | select %}
+
+[includeIf "hasconfig:remote.*.url:git@github.com:{{ org }}/**"]
+    path = ~/.config/git-configs/work.gitconfig
+
+[includeIf "hasconfig:remote.*.url:https://github.com/{{ org }}/**"]
+    path = ~/.config/git-configs/work.gitconfig
+{% endfor %}
+
+# --- Remote URL-based includes (Bitbucket orgs) ---
+{% for org in git_work_bitbucket_orgs.split(',') | map('trim') | select %}
+
+[includeIf "hasconfig:remote.*.url:git@bitbucket.org:{{ org }}/**"]
+    path = ~/.config/git-configs/work.gitconfig
+
+[includeIf "hasconfig:remote.*.url:https://bitbucket.org/{{ org }}/**"]
+    path = ~/.config/git-configs/work.gitconfig
+{% endfor %}
 
 ########################################
 # End of ~/.gitconfig

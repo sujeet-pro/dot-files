@@ -1,0 +1,78 @@
+---
+# Symlinks user_scripts/ entries to ~/.local/bin/ so they're available globally.
+#
+# Supports two patterns:
+#   - user_scripts/<name>.sh        → symlink as ~/.local/bin/<name>
+#   - user_scripts/<name>/index.sh  → symlink as ~/.local/bin/<name>
+#   - user_scripts/<name>/index.py  → symlink as ~/.local/bin/<name>
+
+- name: Ensure ~/.local/bin directory exists
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.local/bin"
+    state: directory
+    mode: "0755"
+  tags: [user-scripts]
+
+- name: Ensure ~/.config/user_scripts directory exists
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.config/user_scripts"
+    state: directory
+    mode: "0755"
+  tags: [user-scripts]
+
+# --- Single-file scripts (user_scripts/*.sh, *.py) ---
+
+- name: Find single-file user scripts
+  ansible.builtin.find:
+    paths: "{{ dotfiles_repo }}/user_scripts"
+    patterns: ["*.sh", "*.py"]
+    depth: 1
+  register: single_file_scripts
+  tags: [user-scripts]
+
+- name: Symlink single-file user scripts
+  ansible.builtin.file:
+    src: "{{ item.path }}"
+    dest: "{{ home_dir }}/.local/bin/{{ item.path | basename | regex_replace('\\.(sh|py)$', '') }}"
+    state: link
+    force: true
+  loop: "{{ single_file_scripts.files }}"
+  tags: [user-scripts]
+
+# --- Folder-based scripts (user_scripts/<name>/index.sh or index.py) ---
+
+- name: Find folder-based user scripts (index.sh)
+  ansible.builtin.find:
+    paths: "{{ dotfiles_repo }}/user_scripts"
+    patterns: "index.sh"
+    recurse: true
+    depth: 2
+  register: folder_scripts_sh
+  tags: [user-scripts]
+
+- name: Find folder-based user scripts (index.py)
+  ansible.builtin.find:
+    paths: "{{ dotfiles_repo }}/user_scripts"
+    patterns: "index.py"
+    recurse: true
+    depth: 2
+  register: folder_scripts_py
+  tags: [user-scripts]
+
+- name: Symlink folder-based user scripts (index.sh)
+  ansible.builtin.file:
+    src: "{{ item.path }}"
+    dest: "{{ home_dir }}/.local/bin/{{ item.path | dirname | basename }}"
+    state: link
+    force: true
+  loop: "{{ folder_scripts_sh.files }}"
+  tags: [user-scripts]
+
+- name: Symlink folder-based user scripts (index.py)
+  ansible.builtin.file:
+    src: "{{ item.path }}"
+    dest: "{{ home_dir }}/.local/bin/{{ item.path | dirname | basename }}"
+    state: link
+    force: true
+  loop: "{{ folder_scripts_py.files }}"
+  tags: [user-scripts]

@@ -22,6 +22,11 @@ export GIT_USER_NAME="Your Name"
 export GIT_PERSONAL_EMAIL="you@example.com"
 export GIT_WORK_EMAIL="you@company.com"
 
+# --- Git Work Orgs (comma-separated, for remote URL-based config matching) ---
+# These ensure work git config applies even for repos cloned outside ~/work/
+export GIT_WORK_GITHUB_ORGS="Quince-Engineering"
+export GIT_WORK_BITBUCKET_ORGS="lastbrand"
+
 # --- SSH Key Filenames (just the filename, not the full path) ---
 export SSH_PERSONAL_KEY="id_ed25519_personal"
 export SSH_WORK_KEY="id_ed25519_work"
