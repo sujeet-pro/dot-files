@@ -3,6 +3,10 @@ git_user_name: "{{ lookup('env', 'GIT_USER_NAME') }}"
 git_personal_email: "{{ lookup('env', 'GIT_PERSONAL_EMAIL') }}"
 git_work_email: "{{ lookup('env', 'GIT_WORK_EMAIL') }}"
 
+# Comma-separated list of directories that contain work repos
+# Defaults to "~/work,~/workspace" if not set
+git_work_folders: "{{ lookup('env', 'GIT_WORK_FOLDERS') | default('~/work,~/workspace', true) }}"
+
 # Comma-separated list of GitHub orgs that should use work git config
 # e.g. "Quince-Engineering,AnotherOrg"
 git_work_github_orgs: "{{ lookup('env', 'GIT_WORK_GITHUB_ORGS') }}"

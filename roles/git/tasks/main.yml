@@ -13,11 +13,10 @@
     mode: "0644"
   tags: [git, gitconfig]
 
-- name: Render personal gitconfig from template
-  ansible.builtin.template:
-    src: gitconfig-personal.j2
-    dest: "{{ home_dir }}/.config/git-configs/personal.gitconfig"
-    mode: "0644"
+- name: Remove old personal gitconfig (no longer needed)
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.config/git-configs/personal.gitconfig"
+    state: absent
   tags: [git, gitconfig]
 
 - name: Render work gitconfig from template

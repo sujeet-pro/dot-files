@@ -120,8 +120,8 @@ check_symlink "$HOME/.zshrc" ".zshrc"
 check_symlink "$HOME/.config/starship.toml" "starship.toml"
 check_symlink "$HOME/.config/mise/config.toml" "mise/config.toml"
 check_file "$HOME/.gitconfig" ".gitconfig"
-check_file "$HOME/.gitconfig-personal" ".gitconfig-personal"
-check_file "$HOME/.gitconfig-work" ".gitconfig-work"
+check_file "$HOME/.config/git-configs/personal.gitconfig" "git-configs/personal.gitconfig"
+check_file "$HOME/.config/git-configs/work.gitconfig" "git-configs/work.gitconfig"
 check_file "$HOME/.ssh/config" ".ssh/config"
 check_file "$HOME/.ssh/config.local" ".ssh/config.local"
 check_symlink "$HOME/.aws/config" ".aws/config"
@@ -163,7 +163,19 @@ fi
 echo ""
 echo "Directories:"
 check_file "$HOME/personal" "~/personal"
-check_file "$HOME/work" "~/work"
+
+# Check work folders (from GIT_WORK_FOLDERS env var, defaults to ~/work,~/workspace)
+GIT_WORK_FOLDERS_VAL="${GIT_WORK_FOLDERS:-~/work,~/workspace}"
+IFS=',' read -ra WORK_DIRS <<< "$GIT_WORK_FOLDERS_VAL"
+for dir in "${WORK_DIRS[@]}"; do
+  dir=$(echo "$dir" | xargs)  # trim whitespace
+  expanded_dir="${dir/#\~/$HOME}"
+  if [ -d "$expanded_dir" ]; then
+    pass "$dir (work folder)"
+  else
+    warn "$dir — work folder does not exist yet"
+  fi
+done
 
 # --- Docker runtime ---
 echo ""

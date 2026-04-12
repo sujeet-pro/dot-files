@@ -5,8 +5,9 @@
 # To change, update roles/git/templates/gitconfig.j2 and re-run the playbook.
 #
 # Directory conventions:
-#   - All work repos under:     ~/work/
 #   - All personal repos under: ~/personal/
+#   - All work repos under configured work folders (GIT_WORK_FOLDERS env var)
+#     Defaults to: ~/work/, ~/workspace/
 ########################################
 
 ########################################
@@ -90,17 +91,21 @@
 
 ########################################
 # 8. Conditional includes
-#    - Directory-based: for repos under ~/work/ and ~/personal/
-#    - Remote URL-based: for work repos cloned outside ~/work/
+#    - Directory-based: for repos under work and personal folders
+#    - Remote URL-based: for work repos cloned outside work folders
+#
+#    Work folders (from GIT_WORK_FOLDERS env var):
+{% for folder in git_work_folders.split(',') | map('trim') | select %}
+#      {{ folder }}/
+{% endfor -%}
 ########################################
 
-# --- Directory-based includes ---
+# --- Directory-based includes (work) ---
+{% for folder in git_work_folders.split(',') | map('trim') | select %}
 
-[includeIf "gitdir:~/work/"]
+[includeIf "gitdir:{{ folder }}/"]
     path = ~/.config/git-configs/work.gitconfig
-
-[includeIf "gitdir:~/personal/"]
-    path = ~/.config/git-configs/personal.gitconfig
+{% endfor %}
 
 # --- Remote URL-based includes (GitHub orgs) ---
 {% for org in git_work_github_orgs.split(',') | map('trim') | select %}

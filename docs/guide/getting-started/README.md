@@ -46,12 +46,19 @@ The setup script runs these steps in order:
 
 After setup completes, do these before anything else:
 
-1. **Edit `~/.zshenv`** with your personal values:
+1. **Edit `~/.zshenv`** -- the file is organized into sections. Fill in the **REQUIRED** section first:
    - `GIT_USER_NAME` -- your full name for git commits
    - `GIT_PERSONAL_EMAIL` -- personal email for git
    - `GIT_WORK_EMAIL` -- work email for git
    - `SSH_PERSONAL_KEY` -- filename for your personal SSH key
    - `SSH_WORK_KEY` -- filename for your work SSH key
+
+   Then fill in the **RECOMMENDED** section for work/personal separation:
+   - `GIT_WORK_FOLDERS` -- comma-separated paths where work repos live (defaults to `~/work,~/workspace`)
+   - `GIT_WORK_GITHUB_ORGS` -- your work GitHub org names
+   - `GIT_WORK_BITBUCKET_ORGS` -- your work Bitbucket workspace names
+
+   The **OPTIONAL** section (API tokens, MCP configs, etc.) can be filled in later as needed.
 
 2. **Generate SSH keys** if you have not already:
    ```bash

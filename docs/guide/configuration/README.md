@@ -45,12 +45,12 @@ git pull && make update
 
 These files are **generated** from Jinja2 templates using values from your `~/.zshenv`. They are re-rendered on every playbook run, so direct edits will be overwritten.
 
-| File                  | Template Source                            |
-| --------------------- | ------------------------------------------ |
-| `~/.gitconfig`        | `roles/git/templates/.gitconfig.j2`        |
-| `~/.gitconfig-personal` | `roles/git/templates/.gitconfig-personal.j2` |
-| `~/.gitconfig-work`   | `roles/git/templates/.gitconfig-work.j2`   |
-| `~/.ssh/config`       | `roles/ssh/templates/config.j2`            |
+| File                                       | Template Source                              |
+| ------------------------------------------ | -------------------------------------------- |
+| `~/.gitconfig`                             | `roles/git/templates/gitconfig.j2`           |
+| `~/.config/git-configs/personal.gitconfig` | `roles/git/templates/gitconfig-personal.j2`  |
+| `~/.config/git-configs/work.gitconfig`     | `roles/git/templates/gitconfig-work.j2`      |
+| `~/.ssh/config`                            | `roles/ssh/templates/config.j2`              |
 
 To change these configs, either:
 - Edit the Jinja2 template in the repo, or
@@ -60,7 +60,7 @@ To change these configs, either:
 
 The `~/.zshenv` file is **never committed** to the repo. It holds personal data that varies per machine and per user. On first run, `setup.sh` copies `.zshenv.example` to `~/.zshenv` as a starting point.
 
-### Required Variables
+### Required Variables (fill before running setup)
 
 | Variable            | Purpose                                    |
 | ------------------- | ------------------------------------------ |
@@ -70,17 +70,43 @@ The `~/.zshenv` file is **never committed** to the repo. It holds personal data 
 | `SSH_PERSONAL_KEY`  | Filename of personal SSH key (e.g., `id_ed25519_personal`) |
 | `SSH_WORK_KEY`      | Filename of work SSH key (e.g., `id_ed25519_work`)         |
 
-### Optional Variables
+### Recommended Variables (for full work/personal separation)
 
-You can also set API tokens, MCP server configurations, and other machine-specific values. See `.zshenv.example` for the full list of supported variables.
+| Variable                  | Purpose                                                       |
+| ------------------------- | ------------------------------------------------------------- |
+| `GIT_WORK_FOLDERS`        | Comma-separated paths where work repos live (default: `~/work,~/workspace`) |
+| `GIT_WORK_GITHUB_ORGS`    | Comma-separated GitHub orgs that should use work git config   |
+| `GIT_WORK_BITBUCKET_ORGS` | Comma-separated Bitbucket workspaces for work git config      |
+
+### Optional Variables (configure later)
+
+API tokens, MCP server configurations, and other integrations. See `.zshenv.example` for the full list — these are not needed for setup to work.
 
 ## Work vs Personal Separation
 
-Git is configured with **conditional includes** based on directory path:
+Git is configured with **conditional includes** based on directory path and remote URL:
 
-- **`~/personal/`** -- Uses `GIT_PERSONAL_EMAIL` and personal git settings via `~/.gitconfig-personal`
-- **`~/work/`** -- Uses `GIT_WORK_EMAIL`, work-specific `.gitignore-work`, and work git settings via `~/.gitconfig-work`
+### Directory-based matching
 
-This means you never have to remember to switch git identities. Repos cloned under `~/work/` automatically use your work email, and repos under `~/personal/` use your personal email.
+- **`~/personal/`** -- Uses `GIT_PERSONAL_EMAIL` and personal git settings
+- **Work folders** -- Uses `GIT_WORK_EMAIL`, work-specific `.gitignore-work`, and work git settings
+
+By default, work folders are `~/work/` and `~/workspace/`. You can customize this by setting `GIT_WORK_FOLDERS` in `~/.zshenv`:
+
+```bash
+# Single folder
+export GIT_WORK_FOLDERS="~/work"
+
+# Multiple folders
+export GIT_WORK_FOLDERS="~/work,~/workspace,~/company-projects"
+```
+
+### Remote URL-based matching
+
+Work git config also applies to repos that match configured GitHub or Bitbucket org URLs, regardless of which directory the repo is cloned into. Set `GIT_WORK_GITHUB_ORGS` and `GIT_WORK_BITBUCKET_ORGS` for this.
+
+### How it works
+
+This means you never have to remember to switch git identities. Repos in work folders or matching work org URLs automatically use your work email. Repos under `~/personal/` use your personal email. Everything else uses the default (personal) identity.
 
 Additionally, Mise tool-version files (`.mise.toml`) are auto-ignored in work repos through the work-specific gitignore, preventing local runtime configs from being accidentally committed to work projects.

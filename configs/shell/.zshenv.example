@@ -1,7 +1,7 @@
 ########################################
 # ~/.zshenv - Environment variables for dotfiles setup
 #
-# Copy this file to ~/.zshenv and fill in your actual values:
+# Copy this file to ~/.zshenv and fill in your values:
 #   cp .zshenv.example ~/.zshenv
 #
 # This file is sourced by zsh before .zshrc and is used by
@@ -13,25 +13,51 @@
 # --- mise shims (makes mise-managed tools available to GUI apps) ---
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 
+########################################
+# REQUIRED — Fill these BEFORE running setup
+#
+# These are used by Ansible templates to generate .gitconfig
+# and .ssh/config. Setup will produce broken configs without them.
+########################################
+
 # --- Default editor & visual ---
 export EDITOR="zed --wait"
 export VISUAL="zed --wait"
 
-# --- Git Config ---
+# --- Git Identity ---
 export GIT_USER_NAME="Your Name"
 export GIT_PERSONAL_EMAIL="you@example.com"
 export GIT_WORK_EMAIL="you@company.com"
-
-# --- Git Work Orgs (comma-separated, for remote URL-based config matching) ---
-# These ensure work git config applies even for repos cloned outside ~/work/
-export GIT_WORK_GITHUB_ORGS="Quince-Engineering"
-export GIT_WORK_BITBUCKET_ORGS="lastbrand"
 
 # --- SSH Key Filenames (just the filename, not the full path) ---
 export SSH_PERSONAL_KEY="id_ed25519_personal"
 export SSH_WORK_KEY="id_ed25519_work"
 
-# --- API Tokens (optional — add as needed) ---
+########################################
+# RECOMMENDED — Fill these for full work/personal separation
+#
+# These control which repos get work git config applied.
+# Safe to leave defaults initially, but fill in for proper setup.
+########################################
+
+# --- Work Folders (comma-separated paths where work repos live) ---
+# Git work config (work email, etc.) applies to repos in these directories.
+# Defaults to ~/work,~/workspace if not set.
+# export GIT_WORK_FOLDERS="~/work,~/workspace"
+
+# --- Git Work Orgs (comma-separated, for remote URL-based config matching) ---
+# These ensure work git config applies even for repos cloned outside work folders
+export GIT_WORK_GITHUB_ORGS="Quince-Engineering"
+export GIT_WORK_BITBUCKET_ORGS="lastbrand"
+
+########################################
+# OPTIONAL — Configure later as needed
+#
+# These are for API tokens, MCP servers, and other integrations.
+# They are NOT required for the initial setup to work.
+########################################
+
+# --- API Tokens ---
 # export ANTHROPIC_API_KEY=""
 # export OPENAI_API_KEY=""
 # export GEMINI_API_KEY=""
@@ -42,7 +68,7 @@ export SSH_WORK_KEY="id_ed25519_work"
 # === NPM ===
 # export NPM_TOKEN=""
 
-# --- AWS (optional) ---
+# --- AWS ---
 # export AWS_DEFAULT_REGION="ap-south-1"
 
 # === Confluence MCP (mcp-atlassian) ===
@@ -61,14 +87,14 @@ export SSH_WORK_KEY="id_ed25519_work"
 # export GOOGLE_MCP_CLIENT_SECRET=""
 # export GOOGLE_DRIVE_OAUTH_CREDENTIALS="$HOME/.config/google-drive-mcp/gcp-oauth.keys.json"
 
-# --- Statsig (optional) ---
+# --- Statsig ---
 # export STATSIG_CONSOLE_API_KEY=""
 
 # --- Claude Code Configuration ---
 # export CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000
 # export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 
-# --- Datadog (optional) ---
+# --- Datadog ---
 # export DATADOG_APP_KEY=""
 # export DATADOG_API_KEY=""
 # export DATADOG_KEY_ID=""
